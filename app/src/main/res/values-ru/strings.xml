@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">НМедиа</string>
-    <string name="nmedia" translatable="false">НМедиа!</string>
+    <string name="nmedia" translatable="false">Нмедиа!</string>
+    <string name="description_post_menu">Меню поста</string>
+    <string name="description_post_author_avatar">Пост автора</string>
+    <string name="description_likes">Нравится</string>
+    <string name="description_share">Поделится</string>
+    <string name="description_view">Просмотры</string>
 </resources>
