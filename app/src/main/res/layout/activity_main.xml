@@ -13,6 +13,7 @@
         android:layout_width="@dimen/avatar_size"
         android:layout_height="@dimen/avatar_size"
         android:contentDescription="@string/description_post_author_avatar"
+        android:src="@drawable/ic_netology_48dp"
         app:layout_constraintBottom_toBottomOf="@id/barrierTop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
