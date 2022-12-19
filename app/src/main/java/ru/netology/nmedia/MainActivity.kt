@@ -3,38 +3,31 @@ package ru.netology.nmedia
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val viewModel: PostViewModel by viewModels()
-        viewModel.data.observe(this) { post ->
+        val adapter = PostAdapter({
+            viewModel.likeById(it.id)
+        }, {
+            viewModel.shareById(it.id)
+        })
 
-            with(binding) {
-                author.text = post.author
-                published.text = post.published
-                content.text = post.content
-                likesQuantity.text = UserCommand.numberConversion(post.likes)
-                sharingQuantity.text = UserCommand.numberConversion(post.share)
-                viewQuantity.text = UserCommand.numberConversion(post.views)
-                likes.setImageResource(if (post.likeByMe) R.drawable.is_liked_24 else R.drawable.ic_baseline_favorite_border_24)
-
-                likes.setOnClickListener {
-                    viewModel.like()
-                }
-
-                share.setOnClickListener {
-                    viewModel.share()
-                }
-            }
+        binding.list.adapter = adapter
+        viewModel.data.observe(this) { posts ->
+            adapter.submitList(posts)
         }
     }
 }
+
 
 object UserCommand {
     fun numberConversion(number: Int): String {
