@@ -2,6 +2,7 @@ package ru.netology.nmedia
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import ru.netology.nmedia.adapter.PostAdapter
@@ -12,7 +13,6 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -24,10 +24,12 @@ class MainActivity : AppCompatActivity() {
         }, {
             viewModel.removeById(it.id)
         }, {
+            binding.close.visibility = View.VISIBLE
             viewModel.edit(it)
         })
 
         binding.list.adapter = adapter
+        binding.close.visibility = View.INVISIBLE
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
         }
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 setText(post.content)
             }
         }
+
         binding.save.setOnClickListener {
             with(binding.content) {
                 if (text.isNullOrBlank()) {
@@ -48,15 +51,28 @@ class MainActivity : AppCompatActivity() {
                         "Content can't be empty",
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.close.visibility = View.INVISIBLE
                     return@setOnClickListener
                 }
                 viewModel.changeContent(text.toString())
                 viewModel.save()
-
+                binding.close.visibility = View.INVISIBLE
                 setText("")
                 clearFocus()
                 AndroidUtils.hideKeyboard(this)
             }
+        }
+        binding.close.setOnClickListener {
+            with(binding.content) {
+                viewModel.close()
+                binding.close.visibility = View.INVISIBLE
+                setText("")
+                clearFocus()
+                AndroidUtils.hideKeyboard(this)
+            }
+        }
+        binding.content.setOnClickListener {
+            binding.close.visibility = View.VISIBLE
         }
     }
 }
