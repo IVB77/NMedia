@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/author"
         tools:text="@sample/posts.json/data/published" />
 
-    <ImageButton
+    <!--ImageButton
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:contentDescription="@string/description_post_menu"
         android:src="@drawable/ic_baseline_more_vert_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" /-->
 
     <TextView
         android:id="@+id/content"
@@ -82,29 +82,6 @@
         tools:layout_editor_absoluteY="240dp" />
 
     <ImageView
-        android:id="@+id/likes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:contentDescription="@string/description_likes"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrierBottom"
-        app:srcCompat="@drawable/ic_baseline_favorite_border_24" />
-
-    <ImageView
-        android:id="@+id/share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/description_share"
-        app:layout_constraintBottom_toBottomOf="@id/likesQuantity"
-        app:layout_constraintStart_toEndOf="@id/likesQuantity"
-        app:layout_constraintTop_toTopOf="@id/likesQuantity"
-        app:srcCompat="@drawable/ic_baseline_share_24"
-        tools:layout_editor_absoluteX="187dp"
-        tools:layout_editor_absoluteY="264dp" />
-
-    <ImageView
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -113,25 +90,6 @@
         app:layout_constraintEnd_toStartOf="@id/viewQuantity"
         app:layout_constraintTop_toTopOf="@id/viewQuantity"
         app:srcCompat="@drawable/ic_baseline_remove_red_eye_24" />
-
-
-    <TextView
-        android:id="@+id/likesQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/likes"
-        app:layout_constraintStart_toEndOf="@id/likes"
-        app:layout_constraintTop_toTopOf="@id/likes"
-        tools:text="@sample/quantity.json/data/likes" />
-
-    <TextView
-        android:id="@+id/sharingQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@sample/quantity.json/data/share"
-        app:layout_constraintBottom_toBottomOf="@id/share"
-        app:layout_constraintStart_toEndOf="@id/share"
-        app:layout_constraintTop_toTopOf="@id/share" />
 
     <TextView
         android:id="@+id/viewQuantity"
@@ -142,4 +100,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/likes" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/likes"
+        style="@style/Widget.AppTheme.LikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:contentDescription="@string/description_post_like"
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/ic_like_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrierBottom"
+        tools:checked="true"
+        tools:text="@sample/quantity.json/data/likes" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/share"
+        style="@style/Widget.AppTheme.ShareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:contentDescription="@string/description_post_like"
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/ic_baseline_share_24"
+        app:layout_constraintStart_toEndOf="@id/likes"
+        app:layout_constraintTop_toBottomOf="@id/barrierBottom"
+        tools:checked="true"
+        tools:text="@sample/quantity.json/data/share" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menu"
+        style="@style/Widget.AppTheme.ShareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:contentDescription="@string/description_post_like"
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/ic_baseline_more_vert_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:checked="true" />
 </androidx.constraintlayout.widget.ConstraintLayout>
