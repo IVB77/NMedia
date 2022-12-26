@@ -301,7 +301,4 @@ class PostRepositoryInMemoryImpl : PostRepository {
         data.value = posts
     }
 
-    override fun close(post: Post) {
-        data.value = posts
-    }
 }
