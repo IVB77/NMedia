@@ -10,4 +10,7 @@
     <string name="post_text">Add post</string>
     <string name="description_post_like">Like</string>
     <string name="menu_edit">Edit</string>
+    <string name="error_empty_content">ERROR empty content</string>
+    <string name="chooser_share_post">Share post</string>
+    <string name="description_post_save">Save</string>
 </resources>

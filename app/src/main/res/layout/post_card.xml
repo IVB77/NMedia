@@ -43,16 +43,6 @@
         app:layout_constraintTop_toBottomOf="@id/author"
         tools:text="@sample/posts.json/data/published" />
 
-    <!--ImageButton
-        android:id="@+id/menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/description_post_menu"
-        android:src="@drawable/ic_baseline_more_vert_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" /-->
-
     <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -119,7 +109,6 @@
         style="@style/Widget.AppTheme.ShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checkable="true"
         android:contentDescription="@string/description_post_like"
         android:textColor="@color/share"
         app:backgroundTint="@color/background_button"
@@ -134,7 +123,6 @@
         style="@style/Widget.AppTheme.ShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checkable="true"
         android:contentDescription="@string/description_post_like"
         android:textColor="@color/menu"
         app:backgroundTint="@color/background_button"

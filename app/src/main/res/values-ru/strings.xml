@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">НМедиа</string>
-    <string name="nmedia" translatable="false">Нмедиа!</string>
     <string name="description_post_menu">Меню поста</string>
     <string name="description_post_author_avatar">Пост автора</string>
     <string name="description_likes">Нравится</string>
@@ -11,4 +10,8 @@
     <string name="post_text">Добавить пост</string>
     <string name="description_post_like">Нравится</string>
     <string name="menu_edit">Редактировать</string>
+    <string name="error_empty_content">Ошибка пустое значение</string>
+    <string name="chooser_share_post">Поделится постом</string>
+    <string name="description_post_save">Сохранить</string>
+    <string name="nmedia">НМедиа!</string>
 </resources>
