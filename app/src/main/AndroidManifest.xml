@@ -7,25 +7,11 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_netology"
-        android:label="@string/app_name"
+        android:label="@string/nmedia"
         android:roundIcon="@mipmap/ic_netology_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NMedia"
         tools:targetApi="33">
-        <activity
-            android:name=".activity.NewPostActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activity.NewPostResultContract"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">
@@ -39,6 +25,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity
+            android:name=".activity.NewPostActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <activity
             android:name=".activity.IntentHandlerActivity"
             android:exported="false">
