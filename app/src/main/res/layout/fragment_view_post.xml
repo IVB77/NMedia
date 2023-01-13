@@ -4,18 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.NewPostFragment">
+    tools:context=".activity.ViewPostFragment">
 
-    <EditText
-        android:id="@+id/edit"
+
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:autofillHints=""
-        android:background="@android:color/transparent"
-        android:gravity="start|top"
-        android:hint="@string/post_text"
-        android:inputType="textMultiLine"
-        android:paddingBottom="80dp" />
+        android:layout_height="wrap_content"
+        android:paddingTop="36dp"
+        android:paddingBottom="80dp">
+
+        <TextView
+            android:id="@+id/contentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent" />
+    </ScrollView>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -32,4 +36,14 @@
         app:layout_anchor="@id/bottomAppBar"
         app:srcCompat="@drawable/ic_ok_24" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menu"
+        style="@style/Widget.AppTheme.ShareButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:contentDescription="@string/description_post_like"
+        android:textColor="@color/menu"
+        app:backgroundTint="@color/background_button"
+        app:icon="@drawable/ic_baseline_more_vert_24"
+        tools:checked="true" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

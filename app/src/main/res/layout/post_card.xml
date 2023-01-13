@@ -50,6 +50,7 @@
         android:layout_marginTop="@dimen/common_spacing"
         android:layout_marginBottom="@dimen/common_spacing"
         android:autoLink="web"
+        android:maxHeight="78dp"
         app:layout_constraintTop_toBottomOf="@id/barrierTop"
         tools:text="@sample/posts.json/data/content" />
 
@@ -94,8 +95,8 @@
         android:id="@+id/videoPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/common_spacing"
         android:contentDescription="@string/description_view"
+        android:padding="@dimen/common_spacing"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight="200dp"
@@ -107,31 +108,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/description_likes"
+        android:src="@drawable/ic_play_24"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/videoPicture"
         app:layout_constraintEnd_toEndOf="@id/videoPicture"
         app:layout_constraintStart_toStartOf="@id/videoPicture"
-        app:layout_constraintTop_toTopOf="@id/videoPicture"
-        app:layout_constraintBottom_toBottomOf="@id/videoPicture"
-        android:src="@drawable/ic_play_24"/>
+        app:layout_constraintTop_toTopOf="@id/videoPicture" />
 
     <TextView
         android:id="@+id/videoText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/description_likes"
-        app:layout_constraintTop_toBottomOf="@id/videoPicture"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
         android:autoLink="web"
-        />
+        android:contentDescription="@string/description_likes"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/videoPicture" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/videoGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="gone"
         app:constraint_referenced_ids="videoPicture,videoText,play" />
 
     <com.google.android.material.button.MaterialButton

@@ -19,6 +19,7 @@ interface OnInteractionListener {
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
     fun onVideoGroup(post: Post) {}
+    fun onContent(post: Post) {}
 }
 
 class PostAdapter(
@@ -70,6 +71,9 @@ class PostViewHolder(
             }
             share.setOnClickListener {
                 onInteractionListener.onShare(post)
+            }
+            content.setOnClickListener {
+                onInteractionListener.onContent(post)
             }
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {

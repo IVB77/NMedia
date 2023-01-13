@@ -24,13 +24,15 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
         edited.value = empty
     }
 
-    fun changeContent(content: String) {
+    fun changeContent(content: String, id: Int?) {
         edited.value?.let {
             val text = content.trim()
             if (it.content == text) {
                 return
             }
-            edited.value = it.copy(content = text)
+            var idPost = 0
+            if (id != null){idPost=id}
+            edited.value = it.copy(content = text, id = idPost)
         }
     }
 

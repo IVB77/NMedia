@@ -15,6 +15,7 @@ import ru.netology.nmedia.util.StringArg
 class NewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
+        var Bundle.idArg: String? by StringArg
     }
 
     private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
@@ -27,10 +28,10 @@ class NewPostFragment : Fragment() {
         val binding = FragmentNewPostBinding.inflate(inflater, container, false)
         arguments?.textArg?.let(binding.edit::setText)
         binding.ok.setOnClickListener {
-           viewModel.changeContent(binding.edit.text.toString())
-           viewModel.save()
-           AndroidUtils.hideKeyboard(requireView())
-           findNavController().navigateUp()
+            viewModel.changeContent(binding.edit.text.toString(), arguments?.idArg?.toInt())
+            viewModel.save()
+            AndroidUtils.hideKeyboard(requireView())
+            findNavController().navigateUp()
         }
         return binding.root
     }
