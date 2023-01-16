@@ -3,21 +3,26 @@ package ru.netology.nmedia.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryFileImpl
+import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 
 private val empty = Post(0, "", "", "", false, 0, 0, 0)
 
-class PostViewModel (application: Application): AndroidViewModel(application) {
+class PostViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: PostRepository = PostRepositorySQLiteImpl(
+        AppDb.getInstance(application).postDao
+    )
 
-    private val repository: PostRepository = PostRepositoryFileImpl(application)
+
+    // private val repository: PostRepository = PostRepositoryFileImpl(application)
     val data = repository.getAll()
     private val edited = MutableLiveData(empty)
     fun likeById(id: Int) = repository.likeById(id)
     fun shareById(id: Int) = repository.shareById(id)
     fun removeById(id: Int) = repository.removeById(id)
-    fun findById(id: Int) :Post? = repository.findById(id)
+    fun findById(id: Int): Post? = repository.findById(id)
     fun save() {
         edited.value?.let {
             repository.save(it)
@@ -32,7 +37,9 @@ class PostViewModel (application: Application): AndroidViewModel(application) {
                 return
             }
             var idPost = 0
-            if (id != null){idPost=id}
+            if (id != null) {
+                idPost = id
+            }
             edited.value = it.copy(content = text, id = idPost)
         }
     }
