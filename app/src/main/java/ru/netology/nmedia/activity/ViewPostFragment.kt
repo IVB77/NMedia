@@ -1,5 +1,7 @@
 package ru.netology.nmedia.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,38 +29,90 @@ class ViewPostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentViewPostBinding.inflate(inflater, container, false)
-        arguments?.textArg?.let(binding.contentView::setText)
-
-        binding.ok.setOnClickListener {
+        var idPost = 0
+        if (arguments?.idArg != null) {
+            idPost = requireArguments().idArg!!.toInt()
+        } else {
             findNavController().navigateUp()
         }
-        binding.menu.setOnClickListener {
-            PopupMenu(it.context, it).apply {
-                inflate(R.menu.options_post)
-                setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.remove -> {
-                            if (arguments?.idArg != null) {
-                                val idPost: Int = requireArguments().idArg!!.toInt()
-                                viewModel.removeById(idPost)
-                            }
-                            findNavController().navigateUp()
-                            true
-                        }
-                        R.id.edit -> {
-                            findNavController().navigateUp()
-                            findNavController().navigate(
-                                R.id.action_feedFragment_to_newPostFragment, Bundle().apply
-                                {
-                                    textArg = arguments?.textArg
-                                    idArg = arguments?.idArg
-                                })
-                            true
-                        }
-                        else -> false
-                    }
+        var post = viewModel.findById(idPost)!!
+        binding.apply {
+            content.text = post.content
+            author.text = post.author
+            published.text = post.published
+            content.text = post.content
+            likes.text = UserCommand.numberConversion(post.likes)
+            share.text = UserCommand.numberConversion(post.share)
+            viewQuantity.text = UserCommand.numberConversion(post.views)
+            likes.isChecked = post.likeByMe
+            likes.setOnClickListener {
+                viewModel.likeById(post.id)
+                post = viewModel.findById(idPost)!!
+                likes.text = UserCommand.numberConversion(post.likes)
+            }
+            if (post.video.isNotBlank()) {
+                videoGroup.visibility = View.VISIBLE
+                videoPicture.setImageResource(R.drawable.img)
+                videoText.text = post.video
+            } else {
+                videoGroup.visibility = View.GONE
+            }
+            videoPicture.setOnClickListener {
+                val url = post.video
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+            play.setOnClickListener {
+                val url = post.video
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+            share.setOnClickListener {
+                viewModel.shareById(post.id)
+                post = viewModel.findById(idPost)!!
+                share.text = UserCommand.numberConversion(post.share)
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, post.content)
+                    type = "text/plain"
                 }
-            }.show()
+                val shareIntent =
+                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                startActivity(shareIntent)
+            }
+            author.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            published.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            menu.setOnClickListener {
+                PopupMenu(it.context, it).apply {
+                    inflate(R.menu.options_post)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.remove -> {
+                                if (arguments?.idArg != null) {
+                                    viewModel.removeById(post.id)
+                                }
+                                findNavController().navigateUp()
+                                true
+                            }
+                            R.id.edit -> {
+                                findNavController().navigateUp()
+                                findNavController().navigate(
+                                    R.id.action_feedFragment_to_newPostFragment, Bundle().apply
+                                    {
+                                        textArg = arguments?.textArg
+                                        idArg = arguments?.idArg
+                                    })
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                }.show()
+            }
         }
         return binding.root
     }

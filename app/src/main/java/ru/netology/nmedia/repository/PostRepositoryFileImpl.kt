@@ -23,6 +23,7 @@ class PostRepositoryFileImpl(
             context.openFileInput((filename)).bufferedReader().use {
                 posts = gson.fromJson(it, type)
                 data.value = posts
+                nextId = posts.indices.map { i: Int -> posts[i].id }.max() + 1
             }
         } else {
             sync()
@@ -78,10 +79,14 @@ class PostRepositoryFileImpl(
         sync()
     }
 
-    private fun sync(){
-        context.openFileOutput(filename,Context.MODE_PRIVATE).bufferedWriter().use {
+    private fun sync() {
+        context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts))
         }
+    }
+
+    override fun findById(id: Int): Post? {
+        return posts.find { post -> post.id == id }
     }
 
 }
