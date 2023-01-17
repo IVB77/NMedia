@@ -9,5 +9,5 @@ interface PostRepository {
     fun shareById(id: Int)
     fun removeById(id: Int)
     fun save(post: Post)
-    fun findById(id: Int):Post?
+    fun findById(id: Int): Post
 }

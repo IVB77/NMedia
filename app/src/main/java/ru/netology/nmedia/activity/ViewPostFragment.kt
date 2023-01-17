@@ -35,7 +35,7 @@ class ViewPostFragment : Fragment() {
         } else {
             findNavController().navigateUp()
         }
-        var post = viewModel.findById(idPost)!!
+        var post = viewModel.findById(idPost)
         binding.apply {
             content.text = post.content
             author.text = post.author
@@ -47,7 +47,7 @@ class ViewPostFragment : Fragment() {
             likes.isChecked = post.likeByMe
             likes.setOnClickListener {
                 viewModel.likeById(post.id)
-                post = viewModel.findById(idPost)!!
+                post = viewModel.findById(idPost)
                 likes.text = UserCommand.numberConversion(post.likes)
             }
             if (post.video.isNotBlank()) {
@@ -67,7 +67,7 @@ class ViewPostFragment : Fragment() {
             }
             share.setOnClickListener {
                 viewModel.shareById(post.id)
-                post = viewModel.findById(idPost)!!
+                post = viewModel.findById(idPost)
                 share.text = UserCommand.numberConversion(post.share)
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND

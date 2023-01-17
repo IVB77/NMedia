@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
 }
 
 android {
@@ -42,12 +43,13 @@ dependencies {
     def constraintlayout_version = "2.1.4"
     def recyclerview_version = "1.2.1"
     def junit_version = "4.13.2"
-    def ext_junit_version = "1.1.4"
-    def espresso_core_version = "3.5.0"
+    def ext_junit_version = "1.1.5"
+    def espresso_core_version = "3.5.1"
     def activity_version = "1.6.1"
     def lifecycle_version = "2.5.1"
     def fragment_version = "1.5.5"
     def gson_version = "2.10"
+    def room_version = "2.5.0"
 
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
@@ -60,6 +62,8 @@ dependencies {
     implementation "com.google.android.material:material:$mdc_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation "com.google.code.gson:gson:$gson_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
