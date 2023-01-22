@@ -7,10 +7,14 @@
     <string name="description_share">Share</string>
     <string name="description_view">View</string>
     <string name="menu_remove">Delete</string>
-    <string name="post_text">Add post</string>
+    <string name="post_text" translatable="false">Add post</string>
     <string name="description_post_like">Like</string>
     <string name="menu_edit">Edit</string>
     <string name="error_empty_content">ERROR empty content</string>
     <string name="chooser_share_post">Share post</string>
     <string name="description_post_save">Save</string>
+    <string name="channel_remote_name">channel remote name</string>
+    <string name="channel_remote_description">channel remote</string>
+    <string name="notification_user_liked">%1$s was liked by post %2$s</string>
+    <string name="google_play_unavailable">google play unavailable</string>
 </resources>

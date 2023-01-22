@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
 }
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace 'ru.netology.nmedia'
@@ -38,7 +40,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     def core_version = "1.9.0"
-    def appcompat_version = "1.5.1"
+    def appcompat_version = "1.6.0"
     def mdc_version = "1.7.0"
     def constraintlayout_version = "2.1.4"
     def recyclerview_version = "1.2.1"
@@ -50,6 +52,8 @@ dependencies {
     def fragment_version = "1.5.5"
     def gson_version = "2.10"
     def room_version = "2.5.0"
+    def firebase_version = "31.1.1"
+    def play_services_base_version = "18.1.0"
 
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
@@ -63,6 +67,11 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation "com.google.code.gson:gson:$gson_version"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation platform ("com.google.firebase:firebase-bom:31.2.0")
+    implementation "com.google.firebase:firebase-messaging-ktx:23.1.1"
+    implementation "com.google.android.gms:play-services-base:18.1.0"
+    implementation "com.google.firebase:firebase-auth:21.1.0"
+    implementation "com.google.firebase:firebase-messaging:23.1.1"
     kapt "androidx.room:room-compiler:$room_version"
 
     testImplementation "junit:junit:$junit_version"
