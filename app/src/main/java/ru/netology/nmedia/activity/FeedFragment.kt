@@ -10,15 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.NewPostFragment.Companion.idArg
-import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
+    companion object {
+        var Bundle.textArg: String? by StringArg
+        var Bundle.idArg: String? by StringArg
+    }
 
     private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
     override fun onCreateView(
@@ -82,9 +85,10 @@ class FeedFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-
             findNavController().navigate(
-                R.id.action_feedFragment_to_newPostFragment
+                R.id.action_feedFragment_to_newPostFragment, Bundle().apply {
+                    textArg = arguments?.textArg
+                }
             )
         }
         return binding.root
