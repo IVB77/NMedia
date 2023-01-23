@@ -18,4 +18,6 @@
     <string name="channel_remote_description">управляемый канал</string>
     <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
     <string name="google_play_unavailable">google play не доступен</string>
+    <string name="notification_user_other">"%1$s прислал другое сообщение "</string>
+    <string name="notification_user_new">%1$s пользователь создал новый пост</string>
 </resources>
