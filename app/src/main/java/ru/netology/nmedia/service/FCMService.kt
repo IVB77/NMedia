@@ -38,11 +38,21 @@ class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
 
         message.data[action]?.let {
-            when (Action.valueOf(it)) {
-                Action.LIKE -> handleLike(gson.fromJson(message.data[content], Like::class.java))
-                Action.NEW -> newPost(gson.fromJson(message.data[content], New::class.java))
-                else -> otherMessage(gson.fromJson(message.data[content], Other::class.java))
+            try {
+                when (Action.valueOf(it)) {
+                    Action.LIKE -> handleLike(
+                        gson.fromJson(
+                            message.data[content],
+                            Like::class.java
+                        )
+                    )
+                    Action.NEW -> newPost(gson.fromJson(message.data[content], New::class.java))
+                }
+            } catch (e: Exception) {
+                otherMessage(gson.fromJson(message.data[content], Other::class.java))
             }
+
+
         }
     }
 
@@ -103,7 +113,7 @@ class FCMService : FirebaseMessagingService() {
 }
 
 enum class Action {
-    LIKE, NEW, OTHER
+    LIKE, NEW
 }
 
 data class Like(
