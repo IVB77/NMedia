@@ -25,6 +25,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders.usesCleartextTraffic = false
+        }
+        debug {
+            manifestPlaceholders.usesCleartextTraffic = true
         }
     }
     compileOptions {
@@ -40,8 +44,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     def core_version = "1.9.0"
-    def appcompat_version = "1.6.0"
-    def mdc_version = "1.7.0"
+    def appcompat_version = "1.6.1"
+    def mdc_version = "1.8.0"
     def constraintlayout_version = "2.1.4"
     def recyclerview_version = "1.2.1"
     def junit_version = "4.13.2"
@@ -52,8 +56,8 @@ dependencies {
     def fragment_version = "1.5.5"
     def gson_version = "2.10"
     def room_version = "2.5.0"
-    def firebase_version = "31.1.1"
-    def play_services_base_version = "18.1.0"
+    def okhttp_version = "4.9.1"
+
 
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
@@ -63,16 +67,16 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "com.google.android.material:material:$mdc_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation "com.google.code.gson:gson:$gson_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation platform ("com.google.firebase:firebase-bom:31.2.0")
     implementation "com.google.firebase:firebase-messaging-ktx:23.1.1"
-    implementation "com.google.android.gms:play-services-base:18.1.0"
+    implementation "com.google.android.gms:play-services-base:18.2.0"
     implementation "com.google.firebase:firebase-auth:21.1.0"
     implementation "com.google.firebase:firebase-messaging:23.1.1"
     kapt "androidx.room:room-compiler:$room_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
