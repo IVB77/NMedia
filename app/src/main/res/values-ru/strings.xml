@@ -20,4 +20,8 @@
     <string name="google_play_unavailable">google play не доступен</string>
     <string name="notification_user_other">"%1$s прислал другое сообщение "</string>
     <string name="notification_user_new">%1$s пользователь создал новый пост</string>
+    <string name="empty_posts">пустой пост</string>
+    <string name="retry_loading">ожидание загрузки</string>
+    <string name="error_loading">ошибка загрузки</string>
+    <string name="add_post">add post</string>
 </resources>

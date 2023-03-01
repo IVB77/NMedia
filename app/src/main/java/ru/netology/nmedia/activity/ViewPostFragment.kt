@@ -29,9 +29,9 @@ class ViewPostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentViewPostBinding.inflate(inflater, container, false)
-        var idPost = 0
+        var idPost = 0L
         if (arguments?.idArg != null) {
-            idPost = requireArguments().idArg!!.toInt()
+            idPost = requireArguments().idArg!!.toLong()
         } else {
             findNavController().navigateUp()
         }
@@ -39,18 +39,18 @@ class ViewPostFragment : Fragment() {
         binding.apply {
             content.text = post.content
             author.text = post.author
-            published.text = post.published
+            published.text = post.published.toString()
             content.text = post.content
             likes.text = UserCommand.numberConversion(post.likes)
             share.text = UserCommand.numberConversion(post.share)
             viewQuantity.text = UserCommand.numberConversion(post.views)
-            likes.isChecked = post.likeByMe
+            likes.isChecked = post.likedByMe
             likes.setOnClickListener {
                 viewModel.likeById(post.id)
                 post = viewModel.findById(idPost)
                 likes.text = UserCommand.numberConversion(post.likes)
             }
-            if (post.video.isNotBlank()) {
+            /*if (post.video.isNotBlank()) {
                 videoGroup.visibility = View.VISIBLE
                 videoPicture.setImageResource(R.drawable.img)
                 videoText.text = post.video
@@ -64,7 +64,7 @@ class ViewPostFragment : Fragment() {
             play.setOnClickListener {
                 val url = post.video
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            }
+            }*/
             share.setOnClickListener {
                 viewModel.shareById(post.id)
                 post = viewModel.findById(idPost)

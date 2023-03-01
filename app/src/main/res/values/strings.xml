@@ -19,4 +19,8 @@
     <string name="google_play_unavailable">google play unavailable</string>
     <string name="notification_user_other">"%1$s sent Other Message "</string>
     <string name="notification_user_new">%1$s user create new post</string>
+    <string name="empty_posts">empty post</string>
+    <string name="retry_loading">retry loading</string>
+    <string name="error_loading">error loading</string>
+    <string name="add_post">add post</string>
 </resources>

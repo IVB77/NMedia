@@ -36,12 +36,16 @@ class NewPostFragment : Fragment() {
         arguments?.textArg?.let(binding.edit::setText)
         binding.ok.setOnClickListener {
 
-            viewModel.changeContent(binding.edit.text.toString(), arguments?.idArg?.toInt())
+            viewModel.changeContent(binding.edit.text.toString(), arguments?.idArg?.toLong())
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
-            findNavController().navigate(
-                R.id.action_newPostFragment_to_feedFragment,
-                Bundle().apply { textArg = "" })
+            //findNavController().navigate(
+            //    R.id.action_newPostFragment_to_feedFragment,
+            //    Bundle().apply { textArg = "" })
+        }
+        viewModel.postCreated.observe(viewLifecycleOwner){
+            viewModel.loadPosts()
+            findNavController().navigateUp()
         }
 
         return binding.root
