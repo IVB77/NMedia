@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.joinAll
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostAdapter
@@ -80,7 +81,8 @@ class FeedFragment : Fragment() {
 
         binding.list.adapter = adapter
 
-        viewModel.data.observe(viewLifecycleOwner
+        viewModel.data.observe(
+            viewLifecycleOwner
         ) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
@@ -88,7 +90,7 @@ class FeedFragment : Fragment() {
             binding.emptyText.isVisible = state.empty
         }
 
-        binding.retryButton.setOnClickListener{
+        binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
 
@@ -98,6 +100,10 @@ class FeedFragment : Fragment() {
                     textArg = arguments?.textArg
                 }
             )
+        }
+        binding.swiperefresh.setOnRefreshListener {
+            viewModel.refresh()
+            binding.swiperefresh.isRefreshing = false
         }
         return binding.root
     }
