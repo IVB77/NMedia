@@ -4,14 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.joinAll
 import ru.netology.nmedia.activity.FeedModel
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
-import kotlin.concurrent.thread
+import java.lang.Exception
 
 private val empty = Post(0L, "Me", 28022023L, "", false, 0, 0, 0)
 
@@ -43,53 +42,72 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadPosts() {
-        thread {
-            _data.postValue(FeedModel(loading = true))
-            try {
-                val posts = repository.getAll()
-                FeedModel(posts = posts, empty = posts.isEmpty())
-            } catch (e: IOException) {
-                FeedModel(error = true)
-            }.also(_data::postValue)
-        }
+        _data.postValue(FeedModel(loading = true))
+        repository.getAll(object : PostRepository.GetAllCallback<List<Post>> {
+            override fun onSuccess(posts: List<Post>) {
+                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+            }
+
+            override fun onError(e: Exception) {
+                _data.postValue(FeedModel(error = true))
+            }
+        })
     }
 
     fun likeById(id: Long) {
+        val likePost = _data.value!!.posts.find { it.id == id }!!
+        repository.likeById(likePost, object : PostRepository.GetAllCallback<Post> {
+            override fun onSuccess(posts: Post) {
+                _data.postValue(
+                    FeedModel(
+                        _data.value?.posts.orEmpty().map { if (it.id == id) posts else it })
+                )
+            }
 
-        thread {
-            val likePost = repository.likeById(_data.value!!.posts.find { it.id == id }!!)
-            _data.postValue(
-                FeedModel(
-                    _data.value?.posts.orEmpty().map { if (it.id == id) likePost else it })
-            )
+            override fun onError(e: Exception) {
+                _data.postValue(FeedModel(error = true))
+            }
+        })
 
-        }
+
     }
 
     fun shareById(id: Long) = repository.shareById(id)
     fun findById(id: Long) = repository.findById(id)
     fun removeById(id: Long) {
-        thread {
-            val old = _data.value?.posts.orEmpty()
-            _data.postValue(
-                _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                    .filter { it.id != id }
-                )
+        val old = _data.value?.posts.orEmpty()
+        _data.postValue(
+            _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                .filter { it.id != id }
             )
-            try {
-                //repository.removeById(id)
-            } catch (e: IOException) {
-                _data.postValue(_data.value?.copy(posts = old))
-            }
+        )
+        try {
+            repository.removeById(id, object : PostRepository.GetAllCallback<Any> {
+                override fun onSuccess(posts: Any) {}
+
+                override fun onError(e: Exception) {
+                    _data.postValue(FeedModel(error = true))
+                }
+            })
+        } catch (e: IOException) {
+            _data.postValue(_data.value?.copy(posts = old))
         }
     }
 
+
     fun save() {
         edited.value?.let {
-            thread {
-                repository.save(it)
-                _postCreated.postValue(Unit)
-            }
+
+            repository.save(it, object : PostRepository.GetAllCallback<Any> {
+                override fun onSuccess(posts: Any) {
+                    _postCreated.postValue(Unit)
+                }
+
+                override fun onError(e: Exception) {
+                    _data.postValue(FeedModel(error = true))
+                }
+            })
+
 
         }
         edited.value = empty
