@@ -6,6 +6,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.UserCommand
 import ru.netology.nmedia.databinding.PostCardBinding
@@ -44,8 +45,15 @@ class PostViewHolder(
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
+        val urlAvatars = "http://10.0.2.2:9999/avatars/"
         binding.apply {
             author.text = post.author
+
+            Glide.with(avatar)
+                .load("$urlAvatars${post.authorAvatar}")
+                .timeout(10000)
+                .into(avatar)
+
             published.text = post.published.toString()
             content.text = post.content
             likes.text = UserCommand.numberConversion(post.likes)

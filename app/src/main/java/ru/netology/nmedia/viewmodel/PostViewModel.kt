@@ -12,7 +12,7 @@ import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
 import java.lang.Exception
 
-private val empty = Post(0L, "Me", 28022023L, "", false, 0, 0, 0)
+private val empty = Post(0L, "Me", "",28022023L, "", false, 0, 0, 0)
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     //private val repository: PostRepository = PostRepositorySQLiteImpl(

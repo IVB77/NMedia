@@ -32,9 +32,9 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                     textArg = text
                 }
             )
-        }
 
-        //checkGoogleApiAvailability()
+            //checkGoogleApiAvailability()
+        }
     }
 
     private fun checkGoogleApiAvailability() {
@@ -47,7 +47,11 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 getErrorDialog(this@AppActivity, code, 9000)?.show()
                 return
             }
-            Toast.makeText(this@AppActivity, R.string.google_play_unavailable, Toast.LENGTH_LONG)
+            Toast.makeText(
+                this@AppActivity,
+                R.string.google_play_unavailable,
+                Toast.LENGTH_LONG
+            )
                 .show()
         }
 
