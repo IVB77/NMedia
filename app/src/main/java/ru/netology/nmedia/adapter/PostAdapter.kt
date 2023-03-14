@@ -52,6 +52,7 @@ class PostViewHolder(
             Glide.with(avatar)
                 .load("$urlAvatars${post.authorAvatar}")
                 .timeout(10000)
+                .circleCrop()
                 .into(avatar)
 
             published.text = post.published.toString()
