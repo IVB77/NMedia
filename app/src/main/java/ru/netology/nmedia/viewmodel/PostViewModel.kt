@@ -10,9 +10,9 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
-import java.lang.Exception
 
-private val empty = Post(0L, "Me", "",28022023L, "", false, 0, 0, 0)
+
+private val empty = Post(0L, "Me", "", 28022023L, "", false, 0, 0, 0)
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     //private val repository: PostRepository = PostRepositorySQLiteImpl(
@@ -43,12 +43,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadPosts() {
         _data.postValue(FeedModel(loading = true))
-        repository.getAll(object : PostRepository.GetAllCallback<List<Post>> {
+        repository.getAll(object : PostRepository.Callback<List<Post>> {
             override fun onSuccess(posts: List<Post>) {
                 _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
             }
 
-            override fun onError(e: Exception) {
+            override fun onError(t: Throwable) {
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -56,7 +56,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun likeById(id: Long) {
         val likePost = _data.value!!.posts.find { it.id == id }!!
-        repository.likeById(likePost, object : PostRepository.GetAllCallback<Post> {
+        repository.likeById(likePost, object : PostRepository.Callback<Post> {
             override fun onSuccess(posts: Post) {
                 _data.postValue(
                     FeedModel(
@@ -64,7 +64,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 )
             }
 
-            override fun onError(e: Exception) {
+            override fun onError(t: Throwable) {
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -82,10 +82,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             )
         )
         try {
-            repository.removeById(id, object : PostRepository.GetAllCallback<Any> {
+            repository.removeById(id, object : PostRepository.Callback<Any> {
                 override fun onSuccess(posts: Any) {}
 
-                override fun onError(e: Exception) {
+                override fun onError(t: Throwable) {
                     _data.postValue(FeedModel(error = true))
                 }
             })
@@ -98,12 +98,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun save() {
         edited.value?.let {
 
-            repository.save(it, object : PostRepository.GetAllCallback<Any> {
+            repository.save(it, object : PostRepository.Callback<Any> {
                 override fun onSuccess(posts: Any) {
                     _postCreated.postValue(Unit)
                 }
 
-                override fun onError(e: Exception) {
+                override fun onError(t: Throwable) {
                     _data.postValue(FeedModel(error = true))
                 }
             })
