@@ -1,117 +1,58 @@
 package ru.netology.nmedia.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
+import okio.IOException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.entity.PostEntity
+import ru.netology.nmedia.entity.toEntity
+import ru.netology.nmedia.error.ApiError
+import ru.netology.nmedia.error.NetworkError
+import ru.netology.nmedia.error.UnknownError
 
 
-class PostRepositoryImpl : PostRepository {
-
-    override fun getAll(callback: PostRepository.Callback<List<Post>>) {
-        PostsApi.retrofitService.getAll().enqueue(object : Callback<List<Post>> {
-            override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                if (!response.isSuccessful) {
-                    callback.onError(java.lang.RuntimeException(response.message()))
-                    return
-                }
-                callback.onSuccess(response.body() ?: throw RuntimeException("body is null"))
+class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
+    override val data  = dao.getAll().map { it.map(PostEntity::toDto) }
+    override suspend fun getAll() {
+        try {
+            val response = PostsApi.service.getAll()
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
             }
 
-            override fun onFailure(call: retrofit2.Call<List<Post>>, t: Throwable) {
-                callback.onError(t)
-            }
-        })
-    }
-
-    override fun likeById(post: Post, callback: PostRepository.Callback<Post>) {
-        if (!post.likedByMe) {
-            PostsApi.retrofitService.likeById(post.id).enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if (!response.isSuccessful) {
-                        callback.onError(java.lang.RuntimeException(response.message()))
-                        return
-                    }
-                    callback.onSuccess(
-                        response.body()
-                            ?: throw RuntimeException("Error request to server ${response.code()} ${response.message()}")
-                    )
-                }
-
-                override fun onFailure(call: Call<Post>, t: Throwable) {
-                    callback.onError(t)
-                }
-
-            })
-
-        } else {
-            PostsApi.retrofitService.dislikeById(post.id).enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if (!response.isSuccessful) {
-                        callback.onError(java.lang.RuntimeException(response.message()))
-                        return
-                    }
-                    callback.onSuccess(
-                        response.body()
-                            ?: throw RuntimeException("Error request to server ${response.code()} ${response.message()}")
-                    )
-                }
-
-                override fun onFailure(call: Call<Post>, t: Throwable) {
-                    callback.onError(t)
-                }
-
-            })
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(body.toEntity())
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
         }
     }
 
-    override fun shareById(id: Long) {
-
-
+    override suspend fun likeById(post: Post) {
+        TODO("Not yet implemented")
     }
 
-    override fun save(post: Post, callback: PostRepository.Callback<Any>) {
-
-        PostsApi.retrofitService.save(post).enqueue(object : Callback<Post> {
-            override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                if (!response.isSuccessful) {
-                    callback.onError(java.lang.RuntimeException(response.message()))
-                    return
-                }
-                callback.onSuccess(
-                    response.body()
-                        ?: throw RuntimeException("Error request to server ${response.code()} ${response.message()}")
-                )
-            }
-
-            override fun onFailure(call: Call<Post>, t: Throwable) {
-                callback.onError(t)
-            }
-
-        })
+    override suspend fun shareById(id: Long) {
+        TODO("Not yet implemented")
     }
 
-    override fun removeById(id: Long, callback: PostRepository.Callback<Any>) {
-        PostsApi.retrofitService.removeById(id).enqueue(object : Callback<Unit> {
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (!response.isSuccessful) {
-                    callback.onError(java.lang.RuntimeException(response.message()))
-                    return
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                callback.onError(t)
-            }
-
-        })
-
+    override suspend fun removeById(id: Long) {
+        TODO("Not yet implemented")
     }
 
-    override fun findById(id: Long): Post {
-
-        return findById(id)
+    override suspend fun save(post: Post) {
+        TODO("Not yet implemented")
     }
+
+    override suspend fun findById(id: Long): Post {
+        TODO("Not yet implemented")
+    }
+
 
 }
