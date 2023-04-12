@@ -1,6 +1,10 @@
 package ru.netology.nmedia.repository
 
 import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import okio.IOException
 import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dao.PostDao
@@ -13,7 +17,7 @@ import ru.netology.nmedia.error.UnknownError
 
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
-    override val data = dao.getAll().map { it.map(PostEntity::toDto) }
+    override val data = dao.getAll().map { it.map(PostEntity::toDto) }.flowOn(Dispatchers.Default)
     override suspend fun getAll() {
         try {
             val response = PostsApi.service.getAll()
@@ -33,7 +37,11 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override suspend fun likeById(id: Long) {
         try {
             dao.likeById(id)
-            val post = data.value?.find { it.id == id }
+            val responsePost = PostsApi.service.getById(id)
+            if (!responsePost.isSuccessful) {
+                throw ApiError(responsePost.code(), responsePost.message())
+            }
+            val post = responsePost.body()
             if (post != null) {
                 if (post.likedByMe) {
                     val response = PostsApi.service.dislikeById(id)
@@ -64,7 +72,8 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             dao.removeById(id)
             val response = PostsApi.service.removeById(id)
             if (!response.isSuccessful) {
-                throw ApiError(response.code(), response.message())}
+                throw ApiError(response.code(), response.message())
+            }
 
 
         } catch (e: IOException) {
@@ -93,5 +102,22 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         TODO("Not yet implemented")
     }
 
+    override fun getNewer(id: Long) = flow {
+        while (true) {
+            delay(10_000)
+            val response = PostsApi.service.getNewer(id)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+            val body = response.body() ?: emptyList()
+            emit(body.size)
+            dao.insert(body.toEntity().map { it.copy(newPost = true) })
+        }
+    }.flowOn(Dispatchers.Default)
+
+    override suspend fun allOld() {
+        dao.allOld()
+    }
 
 }

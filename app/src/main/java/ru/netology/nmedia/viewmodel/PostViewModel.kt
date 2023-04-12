@@ -2,9 +2,15 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.activity.FeedModel
 import ru.netology.nmedia.activity.FeedModelState
+import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
@@ -18,7 +24,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-    val data: LiveData<FeedModel> = repository.data.map(::FeedModel)
+    val data: LiveData<FeedModel> = repository.data.map(::FeedModel).asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -28,6 +34,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
+
+    //val ppp : Long = repository.getLastPost().toString().toLong()
+    val newer: LiveData<Int> = data.switchMap {
+        repository.getNewer(it.posts.firstOrNull()?.id?:0L).asLiveData(Dispatchers.Default)
+    }
 
     init {
         loadPosts()
@@ -47,6 +58,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun allOld()= viewModelScope.launch{
+        repository.allOld()
+    }
     fun likeById(id: Long) = viewModelScope.launch {
         try {
             repository.likeById(id)
