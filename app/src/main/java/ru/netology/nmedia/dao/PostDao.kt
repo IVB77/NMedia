@@ -22,9 +22,6 @@ interface PostDao {
     @Query("UPDATE PostEntity SET content = :content WHERE id = :id")
     fun updateContentById(id: Long, content: String)
 
-    suspend fun save(post: PostEntity) =
-        if (post.id == 0L) insert(post) else updateContentById(post.id, post.content)
-
     @Query(
         """
         UPDATE PostEntity SET
@@ -33,10 +30,10 @@ interface PostDao {
         WHERE id = :id
     """
     )
-    fun likeById(id: Int)
+    suspend fun likeById(id: Long)
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
-    fun removeById(id: Int)
+    suspend fun removeById(id: Long)
 
     @Query(
         """
@@ -48,5 +45,5 @@ interface PostDao {
     fun shareById(id: Int)
 
     @Query("SELECT * FROM PostEntity WHERE id = :id")
-    fun findById(id: Int): Post
+    fun findById(id: Long): Post
 }

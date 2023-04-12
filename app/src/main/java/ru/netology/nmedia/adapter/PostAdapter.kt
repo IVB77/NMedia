@@ -2,7 +2,6 @@ package ru.netology.nmedia.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
@@ -49,7 +48,7 @@ class PostViewHolder(
     @SuppressLint("CheckResult")
     fun bind(post: Post) {
         val urlAvatars = "http://10.0.2.2:9999/avatars/"
-        val urlImages = "http://10.0.2.2:9999/images/"
+        //val urlImages = "http://10.0.2.2:9999/images/"
         binding.apply {
             author.text = post.author
 
@@ -58,13 +57,13 @@ class PostViewHolder(
                 .timeout(10000)
                 .circleCrop()
                 .into(avatar)
-            if (post.attachment != null) {
+            /*if (post.attachment != null) {
                 videoPicture.visibility = View.VISIBLE
                 Glide.with(videoPicture)
                     .load("$urlImages${post.attachment!!.url}")
                     .timeout(10000)
                     .into(videoPicture)
-            }
+            }*/
 
             published.text = post.published.toString()
             content.text = post.content

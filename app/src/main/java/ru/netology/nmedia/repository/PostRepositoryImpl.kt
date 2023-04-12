@@ -1,11 +1,7 @@
 package ru.netology.nmedia.repository
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import okio.IOException
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
@@ -17,7 +13,7 @@ import ru.netology.nmedia.error.UnknownError
 
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
-    override val data  = dao.getAll().map { it.map(PostEntity::toDto) }
+    override val data = dao.getAll().map { it.map(PostEntity::toDto) }
     override suspend fun getAll() {
         try {
             val response = PostsApi.service.getAll()
@@ -34,8 +30,29 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         }
     }
 
-    override suspend fun likeById(post: Post) {
-        TODO("Not yet implemented")
+    override suspend fun likeById(id: Long) {
+        try {
+            dao.likeById(id)
+            val post = data.value?.find { it.id == id }
+            if (post != null) {
+                if (post.likedByMe) {
+                    val response = PostsApi.service.dislikeById(id)
+                    if (!response.isSuccessful) {
+                        throw ApiError(response.code(), response.message())
+                    }
+                } else {
+                    val response = PostsApi.service.likeById(id)
+                    if (!response.isSuccessful) {
+                        throw ApiError(response.code(), response.message())
+                    }
+                }
+
+            }
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
     }
 
     override suspend fun shareById(id: Long) {
@@ -43,11 +60,33 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     }
 
     override suspend fun removeById(id: Long) {
-        TODO("Not yet implemented")
+        try {
+            dao.removeById(id)
+            val response = PostsApi.service.removeById(id)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())}
+
+
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
     }
 
     override suspend fun save(post: Post) {
-        TODO("Not yet implemented")
+        try {
+            dao.insert(PostEntity.fromDto(post))
+            val response = PostsApi.service.save(post)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
     }
 
     override suspend fun findById(id: Long): Post {
