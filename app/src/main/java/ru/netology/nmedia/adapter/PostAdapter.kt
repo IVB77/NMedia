@@ -2,6 +2,7 @@ package ru.netology.nmedia.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
@@ -49,6 +50,7 @@ class PostViewHolder(
     fun bind(post: Post) {
         val urlAvatars = "http://10.0.2.2:9999/avatars/"
         //val urlImages = "http://10.0.2.2:9999/images/"
+        val urlMedia = "http://10.0.2.2:9999/media/"
         binding.apply {
             author.text = post.author
 
@@ -74,17 +76,20 @@ class PostViewHolder(
             likes.setOnClickListener {
                 onInteractionListener.onLike(post)
             }
-            /*if (post.video.isNotBlank()) {
-                videoGroup.visibility = View.VISIBLE
-                videoPicture.setImageResource(R.drawable.img)
-                videoText.text = post.video
+            if (post.attachment!=null) {
+                videoPicture.visibility = View.VISIBLE
+                val urlPicture = urlMedia + post.attachment!!.url
+                Glide.with(videoPicture)
+                    .load(urlPicture)
+                    .timeout(10000)
+                    .into(videoPicture)
             } else {
                 videoGroup.visibility = View.GONE
             }
             videoPicture.setOnClickListener {
                 onInteractionListener.onVideoGroup(post)
             }
-            play.setOnClickListener {
+            /*play.setOnClickListener {
                 onInteractionListener.onVideoGroup(post)
             }
             share.setOnClickListener {

@@ -2,17 +2,19 @@ package ru.netology.nmedia.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.PopupMenu
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentViewPostBinding
+import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.util.StringArg
 
@@ -22,7 +24,7 @@ class ViewPostFragment : Fragment() {
         var Bundle.idArg: String? by StringArg
     }
 
-    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
+    private val viewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,80 +32,31 @@ class ViewPostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentViewPostBinding.inflate(inflater, container, false)
-        var idPost = 0L
-        if (arguments?.idArg != null) {
-            idPost = requireArguments().idArg!!.toLong()
-        } else {
-            findNavController().navigateUp()
+        val urlMedia = "http://10.0.2.2:9999/media/"
+        binding.apply {
+            val urlPicture = urlMedia + arguments?.textArg
+            Glide.with(Picture)
+                .load(urlPicture)
+                .timeout(1000)
+                .into(Picture)
         }
-        viewModel.viewModelScope.launch {
-            val post = viewModel.data.value?.posts?.find { it.id == idPost }
-            if (post != null) {
-                binding.apply {
-                    content.text = post.content
-                    author.text = post.author
-                    published.text = post.published.toString()
-                    content.text = post.content
-                    likes.text = UserCommand.numberConversion(post.likes)
-                    share.text = UserCommand.numberConversion(post.share)
-                    viewQuantity.text = UserCommand.numberConversion(post.views)
-                    likes.isChecked = post.likedByMe
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
 
-
-                    share.setOnClickListener {
-                        viewModel.viewModelScope.launch {
-                            viewModel.shareById(post.id)
-                            share.text = UserCommand.numberConversion(post.share)
-                            val intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, post.content)
-                                type = "text/plain"
-                            }
-                            val shareIntent =
-                                Intent.createChooser(intent, getString(R.string.chooser_share_post))
-                            startActivity(shareIntent)
-                        }
-                    }
-                    author.setOnClickListener {
-                        findNavController().navigateUp()
-                    }
-
-                    published.setOnClickListener {
-                        findNavController().navigateUp()
-                    }
-
-                    menu.setOnClickListener {
-                        PopupMenu(it.context, it).apply {
-                            inflate(R.menu.options_post)
-                            setOnMenuItemClickListener { item ->
-                                when (item.itemId) {
-                                    R.id.remove -> {
-                                        if (arguments?.idArg != null) {
-                                            viewModel.removeById(post.id)
-                                        }
-                                        findNavController().navigateUp()
-                                        true
-                                    }
-                                    R.id.edit -> {
-                                        findNavController().navigateUp()
-                                        findNavController().navigate(
-                                            R.id.action_feedFragment_to_newPostFragment,
-                                            Bundle().apply
-                                            {
-                                                textArg = arguments?.textArg
-                                                idArg = arguments?.idArg
-                                            })
-                                        true
-                                    }
-                                    else -> false
-                                }
-                            }
-                        }.show()
-                    }
-                }
+                menuInflater.inflate(R.menu.menu_view_post, menu)
             }
 
-        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    R.id.up -> {
+                        findNavController().navigateUp()
+                        true
+                    }
+
+                    else -> false
+                }
+        }, viewLifecycleOwner)
+
         return binding.root
     }
 

@@ -24,4 +24,9 @@
     <string name="retry_loading">ожидание загрузки</string>
     <string name="error_loading">ошибка загрузки</string>
     <string name="add_post">add post</string>
+    <string name="description_photo">описание фото</string>
+    <string name="remove">удаление</string>
+    <string name="description_select_photo">выберите фото</string>
+    <string name="description_take_photo">сделайте фото</string>
+    <string name="menu_save">сохранить</string>
 </resources>

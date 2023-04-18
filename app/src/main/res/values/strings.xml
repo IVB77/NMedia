@@ -23,4 +23,9 @@
     <string name="retry_loading">retry loading</string>
     <string name="error_loading">error loading</string>
     <string name="add_post">add post</string>
+    <string name="description_photo">description photo</string>
+    <string name="remove">remove</string>
+    <string name="description_select_photo">description select photo</string>
+    <string name="description_take_photo">description take photo</string>
+    <string name="menu_save">menu save</string>
 </resources>

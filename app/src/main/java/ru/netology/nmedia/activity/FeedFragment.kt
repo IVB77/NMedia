@@ -65,8 +65,9 @@ class FeedFragment : Fragment() {
             }
 
             override fun onVideoGroup(post: Post) {
-                //val url = post.video
-                //startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                findNavController().navigate(R.id.action_feedFragment_to_viewPostFragment2,
+                    Bundle().apply
+                    { textArg = post.attachment!!.url })
             }
 
             override fun onContent(post: Post) {
