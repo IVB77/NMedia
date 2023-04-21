@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_netology_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NMedia"
+        android:name=".App"
         android:usesCleartextTraffic="${usesCleartextTraffic}"
         tools:targetApi="33">
         <activity

@@ -7,10 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.activity.FeedModel
 import ru.netology.nmedia.activity.FeedModelState
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
@@ -22,13 +24,36 @@ import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 
 
-private val empty = Post(0L, "Student", "", 28022023L, "", false, 0, 0, 0)
+private val empty = Post(
+    id = 0L,
+    authorId = 0,
+    author = "Student",
+    authorAvatar = "",
+    published = 28022023L,
+    content = "",
+    likedByMe = false,
+    likes = 0,
+    share = 0,
+    views = 0
+)
 private val noPhoto = PhotoModel()
+
 class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-    val data: LiveData<FeedModel> = repository.data.map(::FeedModel).asLiveData(Dispatchers.Default)
+    val data: LiveData<FeedModel> = AppAuth.getInstance()
+        .authStateFlow
+        .flatMapLatest { (myId, _) ->
+            repository.data
+                .map { posts ->
+                    FeedModel(
+                        posts.map { it.copy(ownedByMe = it.authorId == myId) },
+                        posts.isEmpty()
+                    )
+                }
+        }
+        .asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -95,7 +120,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _postCreated.value = Unit
             viewModelScope.launch {
                 try {
-                    when(_photo.value) {
+                    when (_photo.value) {
                         noPhoto -> repository.save(it)
                         else -> _photo.value?.file?.let { file ->
                             repository.saveWithAttachment(it, MediaUpload(file))

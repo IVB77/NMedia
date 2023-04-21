@@ -48,6 +48,6 @@ interface PostDao {
     )
     fun shareById(id: Int)
 
-    @Query("SELECT * FROM PostEntity WHERE id = :id")
-    fun findById(id: Long): Post
+ //   @Query("SELECT * FROM PostEntity WHERE id = :id")
+ //   fun findById(id: Long): Post
 }

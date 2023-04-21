@@ -28,4 +28,9 @@
     <string name="description_select_photo">description select photo</string>
     <string name="description_take_photo">description take photo</string>
     <string name="menu_save">menu save</string>
+    <string name="sign_in">sign in</string>
+    <string name="sign_up">sign up</string>
+    <string name="sign_out">sign out</string>
+    <string name="login">Login:</string>
+    <string name="password">Password:</string>
 </resources>

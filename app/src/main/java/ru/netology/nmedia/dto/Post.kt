@@ -5,6 +5,7 @@ import androidx.room.Embedded
 
 data class Post(
     val id: Long,
+    val authorId: Long,
     val author: String,
     val authorAvatar: String = "",
     val published: Long,
@@ -15,6 +16,7 @@ data class Post(
     val views: Int,
     @Embedded
     var attachment: Attachment? = null,
+    val ownedByMe: Boolean = false,
     // val video: String = ""
 )
 
@@ -24,6 +26,6 @@ data class Attachment(
     val type: AttachType,
 )
 
-enum class AttachType{
+enum class AttachType {
     IMAGE
 }
