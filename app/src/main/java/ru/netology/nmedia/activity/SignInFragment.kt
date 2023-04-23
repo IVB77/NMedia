@@ -17,7 +17,7 @@ import ru.netology.nmedia.viewmodel.AuthViewModel
 
 class SignInFragment : Fragment() {
     private val viewModel: AuthViewModel by activityViewModels()
-    private var fragmentBinding: SignInBinding? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +26,7 @@ class SignInFragment : Fragment() {
     ): View {
         val binding = SignInBinding.inflate(inflater, container, false)
 
-        fragmentBinding = binding
+
         binding.buttonSignIn.setOnClickListener {
             binding.apply {
                 val log: String = login.text.toString()

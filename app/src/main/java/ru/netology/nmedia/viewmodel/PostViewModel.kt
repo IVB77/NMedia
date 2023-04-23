@@ -2,7 +2,10 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import android.os.Bundle
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +13,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.FeedFragment.Companion.textArg
 import ru.netology.nmedia.activity.FeedModel
 import ru.netology.nmedia.activity.FeedModelState
 import ru.netology.nmedia.auth.AppAuth
@@ -38,6 +43,7 @@ private val empty = Post(
 )
 private val noPhoto = PhotoModel()
 
+
 class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PostRepository =
@@ -54,6 +60,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
         }
         .asLiveData(Dispatchers.Default)
+
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -94,6 +101,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun allOld() = viewModelScope.launch {
         repository.allOld()
     }
+
+    fun checkForSignIn():Boolean = AppAuth.getInstance().authStateFlow.value.token.isNullOrBlank()
 
     fun likeById(id: Long) = viewModelScope.launch {
         try {

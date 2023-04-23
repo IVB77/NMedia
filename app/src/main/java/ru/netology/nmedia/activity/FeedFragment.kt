@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostAdapter
+import ru.netology.nmedia.auth.AuthState
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.StringArg
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
@@ -36,7 +39,14 @@ class FeedFragment : Fragment() {
         val adapter = PostAdapter(object : OnInteractionListener {
 
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                if (viewModel.checkForSignIn()) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_signInActivity
+                    )
+                } else {
+                    viewModel.likeById(post.id)
+                }
+
             }
 
             override fun onEdit(post: Post) {
@@ -103,11 +113,18 @@ class FeedFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_feedFragment_to_newPostFragment, Bundle().apply {
-                    textArg = arguments?.textArg
-                }
-            )
+
+            if (viewModel.checkForSignIn()) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_signInActivity
+                )
+            } else {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_newPostFragment, Bundle().apply {
+                        textArg = arguments?.textArg
+                    }
+                )
+            }
         }
         binding.swiperefresh.setOnRefreshListener {
             viewModel.refresh()

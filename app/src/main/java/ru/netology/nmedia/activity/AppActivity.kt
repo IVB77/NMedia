@@ -72,8 +72,10 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 true
             }
             R.id.signout -> {
+                val dialogFragment = DialogFragment()
+                val manager = supportFragmentManager
+                dialogFragment.show(manager, "myDialog")
 
-                AppAuth.getInstance().removeAuth()
                 true
             }
             else -> super.onOptionsItemSelected(item)
