@@ -20,6 +20,7 @@ import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.R
+import ru.netology.nmedia.viewmodel.AuthViewModel
 
 class NewPostFragment : Fragment() {
     companion object {
@@ -28,6 +29,7 @@ class NewPostFragment : Fragment() {
     }
 
     private val viewModel: PostViewModel by activityViewModels()
+    private val viewModelAuth: AuthViewModel by activityViewModels()
 
     private var fragmentBinding: FragmentNewPostBinding? = null
     override fun onCreateView(

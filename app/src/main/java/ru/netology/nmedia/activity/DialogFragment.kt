@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import ru.netology.nmedia.R
 import ru.netology.nmedia.auth.AppAuth
 
 class DialogFragment : DialogFragment() {

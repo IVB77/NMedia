@@ -44,6 +44,17 @@ interface PostsApiService {
     @FormUrlEncoded
     @POST("../users/authentication")
     suspend fun signIn(@Field("login") login:String, @Field("pass") pass:String):Response<AuthState>
+
+    @FormUrlEncoded
+    @POST("../users/registration")
+    suspend fun signUp(@Field("login") login:String, @Field("pass") pass:String, @Field("name") name: String) :Response<AuthState>
+
+
+    @Multipart
+    @POST("../users/registration")
+    suspend fun signUpWithAvatar(@Part("login") login:String, @Part("pass") pass:String, @Part("name") name: String, @Part file:MultipartBody.Part) :Response<AuthState>
+
+
 }
 
 object PostsApi {

@@ -33,4 +33,7 @@
     <string name="sign_out">sign out</string>
     <string name="login">Login:</string>
     <string name="password">Password:</string>
+    <string name="registration">Registration</string>
+    <string name="name">Name</string>
+    <string name="avatar_add">Avatar add</string>
 </resources>

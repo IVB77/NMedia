@@ -34,4 +34,7 @@
     <string name="sign_out">выйти</string>
     <string name="login">Логин:</string>
     <string name="password">Пароль:</string>
+    <string name="registration">Регистрация</string>
+    <string name="name">Имя</string>
+    <string name="avatar_add">Добавить аватар</string>
 </resources>

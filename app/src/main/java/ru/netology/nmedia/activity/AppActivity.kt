@@ -67,8 +67,10 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 true
             }
             R.id.signup -> {
+                findNavController(R.id.nav_host_fragment).navigate(
+                    R.id.action_feedFragment_to_signUpActivity
+                )
 
-                AppAuth.getInstance().setAuth(5, "x-token")
                 true
             }
             R.id.signout -> {

@@ -38,7 +38,7 @@ class SignInFragment : Fragment() {
                         AppAuth.getInstance()
                             .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                     } else {
-                        AppAuth.getInstance().setAuth(0, null)
+                        AppAuth.getInstance().removeAuth()
                     }
                 }
             }

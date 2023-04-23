@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_feedFragment_to_signInActivity"
             app:destination="@+id/signInActivity"/>
+        <action
+            android:id="@+id/action_feedFragment_to_signUpActivity"
+            app:destination="@+id/signUpFragment"/>
     </fragment>
     <fragment
         android:id="@+id/newPostFragment"
@@ -38,4 +41,9 @@
         android:name="ru.netology.nmedia.activity.SignInFragment"
         android:label="sign_in"
         tools:layout="@layout/sign_in" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="ru.netology.nmedia.activity.SignUpFragment"
+        android:label="sign_up"
+        tools:layout="@layout/sign_up" />
 </navigation>
