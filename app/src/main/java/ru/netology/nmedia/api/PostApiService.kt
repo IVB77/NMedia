@@ -9,6 +9,7 @@ import retrofit2.http.*
 import ru.netology.nmedia.auth.AuthState
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.PushToken
 
 private const val BASE_URL = "http://10.0.2.2:9999/api/slow/"
 private val retrofit = Retrofit.Builder()
@@ -54,6 +55,8 @@ interface PostsApiService {
     @POST("../users/registration")
     suspend fun signUpWithAvatar(@Part("login") login:String, @Part("pass") pass:String, @Part("name") name: String, @Part file:MultipartBody.Part) :Response<AuthState>
 
+    @POST("users/push-tokens")
+    suspend fun save(@Body pushToken: PushToken): Response<Unit>
 
 }
 

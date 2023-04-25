@@ -36,4 +36,8 @@
     <string name="registration">Registration</string>
     <string name="name">Name</string>
     <string name="avatar_add">Avatar add</string>
+    <string name="wrong_login_or_password">Wrong login or password</string>
+    <string name="repeat_password">Repeat password:</string>
+    <string name="menu_back">menu_back</string>
+    <string name="differents_password">Differents PASSWORD</string>
 </resources>

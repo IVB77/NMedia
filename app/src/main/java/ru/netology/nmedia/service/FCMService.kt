@@ -4,22 +4,18 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import ru.netology.nmedia.R
-import kotlin.random.Random
+import ru.netology.nmedia.auth.AppAuth
 
 
 class FCMService : FirebaseMessagingService() {
 
-    private val action = "action"
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
-
 
     override fun onCreate() {
         super.onCreate()
@@ -36,8 +32,9 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-
-        message.data[action]?.let {
+        // TODO: replace this in homework
+        println(message.data["content"])
+        /* message.data[action]?.let {
             try {
                 when (Action.valueOf(it)) {
                     Action.LIKE -> handleLike(
@@ -53,83 +50,84 @@ class FCMService : FirebaseMessagingService() {
             }
 
 
-        }
+        }*/
     }
 
     override fun onNewToken(token: String) {
-        println(token)
+        AppAuth.getInstance().sendPushToken(token)
     }
+}
 
-    private fun handleLike(content: Like) {
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(
-                getString(
-                    R.string.notification_user_liked,
-                    content.userName,
-                    content.postAuthor,
-                )
+/*private fun handleLike(content: Like) {
+    val notification = NotificationCompat.Builder(this, channelId)
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentTitle(
+            getString(
+                R.string.notification_user_liked,
+                content.userName,
+                content.postAuthor,
             )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
+        )
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
-    }
+    NotificationManagerCompat.from(this)
+        .notify(Random.nextInt(100_000), notification)
+}
 
-    private fun otherMessage(content: Other) {
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(
-                getString(
-                    R.string.notification_user_other,
-                    content.userName
-                )
+private fun otherMessage(content: Other) {
+    val notification = NotificationCompat.Builder(this, channelId)
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentTitle(
+            getString(
+                R.string.notification_user_other,
+                content.userName
             )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
+        )
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
-    }
+    NotificationManagerCompat.from(this)
+        .notify(Random.nextInt(100_000), notification)
+}
 
-    private fun newPost(content: New) {
+private fun newPost(content: New) {
 
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(
-                getString(
-                    R.string.notification_user_new,
-                    content.userName
-                )
+    val notification = NotificationCompat.Builder(this, channelId)
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentTitle(
+            getString(
+                R.string.notification_user_new,
+                content.userName
             )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(content.postContent))
-            .build()
+        )
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(content.postContent))
+        .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
-    }
+    NotificationManagerCompat.from(this)
+        .notify(Random.nextInt(100_000), notification)
+}
 }
 
 enum class Action {
-    LIKE, NEW
+LIKE, NEW
 }
 
 data class Like(
-    val userId: Long,
-    val userName: String,
-    val postId: Long,
-    val postAuthor: String,
+val userId: Long,
+val userName: String,
+val postId: Long,
+val postAuthor: String,
 )
 
 data class Other(
-    val userId: Long,
-    val userName: String,
-    val postId: Long,
+val userId: Long,
+val userName: String,
+val postId: Long,
 )
 
 data class New(
-    val userName: String,
-    val postContent: String,
-)
+val userName: String,
+val postContent: String,
+)*/

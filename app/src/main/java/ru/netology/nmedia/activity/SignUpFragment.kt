@@ -1,34 +1,28 @@
 package ru.netology.nmedia.activity
 
 import android.app.Activity
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
+import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.dhaval2404.imagepicker.constant.ImageProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import ru.netology.nmedia.api.PostsApi
-import ru.netology.nmedia.auth.AppAuth
-
+import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.SignUpBinding
-import ru.netology.nmedia.model.PhotoModel
-import ru.netology.nmedia.viewmodel.AuthViewModel
-import ru.netology.nmedia.viewmodel.PostViewModel
+import ru.netology.nmedia.viewmodel.SignViewModel
 
 class SignUpFragment : Fragment() {
-    private val viewModel: AuthViewModel by activityViewModels()
-    private val viewModelPost: PostViewModel by activityViewModels()
+    private val authViewModel: SignViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +31,32 @@ class SignUpFragment : Fragment() {
     ): View {
         val binding = SignUpBinding.inflate(inflater, container, false)
 
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
 
+                menuInflater.inflate(R.menu.menu_view_post, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    R.id.up -> {
+                        findNavController().navigateUp()
+                        true
+                    }
+
+                    else -> false
+                }
+        }, viewLifecycleOwner)
+
+        authViewModel.authState.observe(viewLifecycleOwner) { state ->
+            if (state.differentPasswords) {
+                binding.wrongPassword.isVisible = true
+                binding.passwordAccept.setTextColor(Color.RED)
+            }
+        }
+        binding.passwordAccept.setOnClickListener {
+            binding.passwordAccept.setTextColor(Color.BLACK)
+        }
         val pickPhotoLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
@@ -50,7 +69,7 @@ class SignUpFragment : Fragment() {
                     }
                     Activity.RESULT_OK -> {
                         val uri: Uri? = it.data?.data
-                        viewModelPost.changePhoto(uri, uri?.toFile())
+                        authViewModel.changePhoto(uri, uri?.toFile())
                     }
                 }
             }
@@ -75,41 +94,32 @@ class SignUpFragment : Fragment() {
                 val pass: String = password.text.toString()
                 val name: String = nameNew.text.toString()
                 if (pass == passwordAccept.text.toString()) {
-                    if (viewModelPost.photo.value?.file == null) {
-                        viewModel.viewModelScope.launch {
-
-                            val authPass = PostsApi.service.signUp(log, pass, name)
-                            if (authPass.isSuccessful) {
-                                AppAuth.getInstance()
-                                    .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
-                            } else {
-                                AppAuth.getInstance().removeAuth()
-                            }
+                    if (authViewModel.photo.value?.file == null) {
+                        authViewModel.signUp(log, pass, name, null)
+                        if (authViewModel.authState.value!!.errorAddUser) {
+                            Snackbar.make(binding.root, "Error add new user", Snackbar.LENGTH_LONG)
+                                .show()
                         }
-
                         findNavController().navigateUp()
                     } else {
 
-                        viewModel.viewModelScope.launch {
+                        val file = MultipartBody.Part.createFormData(
+                            "file",
+                            authViewModel.photo.value!!.file?.name,
+                            authViewModel.photo.value!!.file!!.asRequestBody()
+                        )
+                        authViewModel.signUp(log, pass, name, file)
 
-                            val file = MultipartBody.Part.createFormData("file",
-                               viewModelPost.photo.value!!.file?.name, viewModelPost.photo.value!!.file!!.asRequestBody())
-                            val authPass = PostsApi.service.signUpWithAvatar(log, pass, name, file)
 
-                            if (authPass.isSuccessful) {
-                                AppAuth.getInstance()
-                                    .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
-                            } else {
-                                AppAuth.getInstance().removeAuth()
-                            }
+                        if (authViewModel.authState.value!!.errorAddUser) {
+                            Snackbar.make(binding.root, "Error add new user", Snackbar.LENGTH_LONG)
+                                .show()
                         }
-
                         findNavController().navigateUp()
 
                     }
                 } else {
-                    Snackbar.make(binding.root, "Passwords don't match", Snackbar.LENGTH_LONG)
-                        .show()
+                    authViewModel.wrongPassword()
                 }
             }
         }

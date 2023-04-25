@@ -1,22 +1,19 @@
 package ru.netology.nmedia.activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
-import ru.netology.nmedia.api.PostsApi
-import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.SignInBinding
-import ru.netology.nmedia.viewmodel.AuthViewModel
+import ru.netology.nmedia.viewmodel.SignViewModel
 
 
 class SignInFragment : Fragment() {
-    private val viewModel: AuthViewModel by activityViewModels()
+    private val viewModel: SignViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -25,24 +22,39 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = SignInBinding.inflate(inflater, container, false)
+        viewModel.authState.observe(viewLifecycleOwner) { state ->
+            if (state.wrongLogin) {
+                binding.wrongLogin.isVisible = true
+                binding.login.text.clear()
+                binding.password.text.clear()
+            }
+        }
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
 
+                menuInflater.inflate(R.menu.menu_view_post, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    R.id.up -> {
+                        findNavController().navigateUp()
+                        true
+                    }
+
+                    else -> false
+                }
+        }, viewLifecycleOwner)
 
         binding.buttonSignIn.setOnClickListener {
             binding.apply {
                 val log: String = login.text.toString()
                 val pass: String = password.text.toString()
-                viewModel.viewModelScope.launch {
-
-                    val authPass = PostsApi.service.signIn(log, pass)
-                    if (authPass.isSuccessful) {
-                        AppAuth.getInstance()
-                            .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
-                    } else {
-                        AppAuth.getInstance().removeAuth()
-                    }
+                viewModel.signIn(log, pass)
+                if (!viewModel.authState.value!!.wrongLogin) {
+                    findNavController().navigateUp()
                 }
             }
-            findNavController().navigateUp()
         }
         return binding.root
     }

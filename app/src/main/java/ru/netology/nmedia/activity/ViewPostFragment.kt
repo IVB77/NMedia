@@ -1,30 +1,22 @@
 package ru.netology.nmedia.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.PopupMenu
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentViewPostBinding
-import ru.netology.nmedia.util.AndroidUtils
-import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.util.StringArg
 
 class ViewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
-        var Bundle.idArg: String? by StringArg
+        //  var Bundle.idArg: String? by StringArg
     }
 
-    private val viewModel: PostViewModel by activityViewModels()
+    //private val viewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

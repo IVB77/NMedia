@@ -7,12 +7,27 @@
     tools:context=".activity.SignUpFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/wrongPassword"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/differents_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="@dimen/icon_button_padding"
+        android:textColor="#F60303"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+
     <EditText
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameNew"
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center_horizontal|bottom"
         android:inputType="text"
@@ -24,7 +39,7 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/nameNew"
+        app:layout_constraintTop_toBottomOf="@id/login"
         app:layout_constraintStart_toStartOf="@id/login"
         android:gravity="center_horizontal|center_vertical"
         android:ems="10"
@@ -37,9 +52,9 @@
         android:id="@+id/nameNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/login"
+        app:layout_constraintTop_toBottomOf="@id/wrongPassword"
         app:layout_constraintStart_toStartOf="@id/login"
-        android:ems="10"
+        android:ems="8"
         android:inputType="text"
         android:padding="@dimen/icon_button_padding"
         android:gravity="center_horizontal|center_vertical"
@@ -56,7 +71,7 @@
         android:ems="10"
         android:inputType="textPassword"
         android:padding="@dimen/icon_button_padding"
-        android:hint="Repeat password:"
+        android:hint="@string/repeat_password"
         tools:ignore="LabelFor" />
 
     <Button
@@ -76,6 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/nameNew"
+        app:layout_constraintEnd_toEndOf="@id/login"
         app:layout_constraintTop_toTopOf="@id/nameNew"
         app:layout_constraintBottom_toBottomOf="@id/nameNew"
         android:contentDescription="@string/avatar_add"

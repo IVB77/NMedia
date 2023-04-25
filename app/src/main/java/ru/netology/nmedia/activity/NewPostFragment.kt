@@ -4,13 +4,11 @@ import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.dhaval2404.imagepicker.constant.ImageProvider
@@ -20,16 +18,16 @@ import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.R
-import ru.netology.nmedia.viewmodel.AuthViewModel
+
 
 class NewPostFragment : Fragment() {
     companion object {
         var Bundle.textArg: String? by StringArg
-        var Bundle.idArg: String? by StringArg
+
     }
 
     private val viewModel: PostViewModel by activityViewModels()
-    private val viewModelAuth: AuthViewModel by activityViewModels()
+
 
     private var fragmentBinding: FragmentNewPostBinding? = null
     override fun onCreateView(
