@@ -69,6 +69,15 @@ class AppAuth private constructor(context: Context) {
         }
     }
 
+    fun checkAuth(recipientId: Long?): String? {
+        return if (recipientId == authStateFlow.value.id) {
+            null
+        } else {
+            authStateFlow.value.token
+        }
+    }
+
+
     companion object {
         @Volatile
         private var instance: AppAuth? = null
@@ -83,8 +92,10 @@ class AppAuth private constructor(context: Context) {
             instance ?: buildAuth(context).also { instance = it }
         }
 
+
         private fun buildAuth(context: Context): AppAuth = AppAuth(context)
     }
+
 }
 
 data class AuthState(val id: Long = 0, val token: String? = null)

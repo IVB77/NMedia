@@ -23,9 +23,11 @@ interface PostsApiService {
     suspend fun getAll(): Response<List<Post>>
 
     @GET("posts/{id}")
-    suspend fun getById(@Path("id") id:Long): Response<Post>
+    suspend fun getById(@Path("id") id: Long): Response<Post>
+
     @GET("posts/{id}/newer")
-    suspend fun getNewer(@Path("id") id:Long): Response<List<Post>>
+    suspend fun getNewer(@Path("id") id: Long): Response<List<Post>>
+
     @POST("posts/{id}/likes")
     suspend fun likeById(@Path("id") id: Long): Response<Post>
 
@@ -40,20 +42,32 @@ interface PostsApiService {
 
     @Multipart
     @POST("media")
-    suspend fun upload(@Part media: MultipartBody.Part): Response< Media>
+    suspend fun upload(@Part media: MultipartBody.Part): Response<Media>
 
     @FormUrlEncoded
     @POST("../users/authentication")
-    suspend fun signIn(@Field("login") login:String, @Field("pass") pass:String):Response<AuthState>
+    suspend fun signIn(
+        @Field("login") login: String,
+        @Field("pass") pass: String
+    ): Response<AuthState>
 
     @FormUrlEncoded
     @POST("../users/registration")
-    suspend fun signUp(@Field("login") login:String, @Field("pass") pass:String, @Field("name") name: String) :Response<AuthState>
+    suspend fun signUp(
+        @Field("login") login: String,
+        @Field("pass") pass: String,
+        @Field("name") name: String
+    ): Response<AuthState>
 
 
     @Multipart
     @POST("../users/registration")
-    suspend fun signUpWithAvatar(@Part("login") login:String, @Part("pass") pass:String, @Part("name") name: String, @Part file:MultipartBody.Part) :Response<AuthState>
+    suspend fun signUpWithAvatar(
+        @Part("login") login: String,
+        @Part("pass") pass: String,
+        @Part("name") name: String,
+        @Part file: MultipartBody.Part
+    ): Response<AuthState>
 
     @POST("users/push-tokens")
     suspend fun save(@Body pushToken: PushToken): Response<Unit>
