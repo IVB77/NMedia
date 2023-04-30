@@ -70,7 +70,7 @@ class AppAuth private constructor(context: Context) {
     }
 
     fun checkAuth(recipientId: Long?): String? {
-        return if (recipientId == authStateFlow.value.id) {
+        return if (recipientId == authStateFlow.value.id || recipientId == null) {
             null
         } else {
             authStateFlow.value.token
