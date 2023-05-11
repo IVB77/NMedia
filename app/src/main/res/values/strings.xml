@@ -19,4 +19,26 @@
     <string name="google_play_unavailable">google play unavailable</string>
     <string name="notification_user_other">"%1$s sent Other Message "</string>
     <string name="notification_user_new">%1$s user create new post</string>
+    <string name="empty_posts">empty post</string>
+    <string name="retry_loading">retry loading</string>
+    <string name="error_loading">error loading</string>
+    <string name="add_post">add post</string>
+    <string name="description_photo">description photo</string>
+    <string name="remove">remove</string>
+    <string name="description_select_photo">description select photo</string>
+    <string name="description_take_photo">description take photo</string>
+    <string name="menu_save">menu save</string>
+    <string name="sign_in">sign in</string>
+    <string name="sign_up">sign up</string>
+    <string name="sign_out">sign out</string>
+    <string name="login">Login:</string>
+    <string name="password">Password:</string>
+    <string name="registration">Registration</string>
+    <string name="name">Name</string>
+    <string name="avatar_add">Avatar add</string>
+    <string name="wrong_login_or_password">Wrong login or password</string>
+    <string name="repeat_password">Repeat password:</string>
+    <string name="menu_back">menu_back</string>
+    <string name="differents_password">Differents PASSWORD</string>
+    <string name="notification_for_recipient">Message for %1$s  : %2$s</string>
 </resources>

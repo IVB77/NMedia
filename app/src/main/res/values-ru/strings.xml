@@ -20,4 +20,26 @@
     <string name="google_play_unavailable">google play не доступен</string>
     <string name="notification_user_other">"%1$s прислал другое сообщение "</string>
     <string name="notification_user_new">%1$s пользователь создал новый пост</string>
+    <string name="empty_posts">пустой пост</string>
+    <string name="retry_loading">ожидание загрузки</string>
+    <string name="error_loading">ошибка загрузки</string>
+    <string name="add_post">add post</string>
+    <string name="description_photo">описание фото</string>
+    <string name="remove">удаление</string>
+    <string name="description_select_photo">выберите фото</string>
+    <string name="description_take_photo">сделайте фото</string>
+    <string name="menu_save">сохранить</string>
+    <string name="sign_in">авторизоваться</string>
+    <string name="sign_up">зарегистрироваться</string>
+    <string name="sign_out">выйти</string>
+    <string name="login">Логин:</string>
+    <string name="password">Пароль:</string>
+    <string name="registration">Регистрация</string>
+    <string name="name">Имя</string>
+    <string name="avatar_add">Добавить аватар</string>
+    <string name="wrong_login_or_password">Wrong login or password</string>
+    <string name="repeat_password">Repeat password:</string>
+    <string name="menu_back">menu_back</string>
+    <string name="differents_password">Differents PASSWORD</string>
+    <string name="notification_for_recipient">Сообщение для %1$s  : %2$s</string>
 </resources>

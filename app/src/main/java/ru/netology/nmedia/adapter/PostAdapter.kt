@@ -1,12 +1,15 @@
 package ru.netology.nmedia.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.UserCommand
 import ru.netology.nmedia.databinding.PostCardBinding
@@ -44,29 +47,50 @@ class PostViewHolder(
     private val binding: PostCardBinding,
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
+    @SuppressLint("CheckResult")
     fun bind(post: Post) {
+        val urlAvatars = "http://10.0.2.2:9999/avatars/"
+        //val urlImages = "http://10.0.2.2:9999/images/"
+        val urlMedia = "http://10.0.2.2:9999/media/"
         binding.apply {
             author.text = post.author
-            published.text = post.published
+
+            Glide.with(avatar)
+                .load("$urlAvatars${post.authorAvatar}")
+                .timeout(10000)
+                .circleCrop()
+                .into(avatar)
+            /*if (post.attachment != null) {
+                videoPicture.visibility = View.VISIBLE
+                Glide.with(videoPicture)
+                    .load("$urlImages${post.attachment!!.url}")
+                    .timeout(10000)
+                    .into(videoPicture)
+            }*/
+
+            published.text = post.published.toString()
             content.text = post.content
             likes.text = UserCommand.numberConversion(post.likes)
             share.text = UserCommand.numberConversion(post.share)
             viewQuantity.text = UserCommand.numberConversion(post.views)
-            likes.isChecked = post.likeByMe
+            likes.isChecked = post.likedByMe
             likes.setOnClickListener {
                 onInteractionListener.onLike(post)
             }
-            if (post.video.isNotBlank()) {
-                videoGroup.visibility = View.VISIBLE
-                videoPicture.setImageResource(R.drawable.img)
-                videoText.text = post.video
+            if (post.attachment!=null) {
+                videoPicture.visibility = View.VISIBLE
+                val urlPicture = urlMedia + post.attachment!!.url
+                Glide.with(videoPicture)
+                    .load(urlPicture)
+                    .timeout(10000)
+                    .into(videoPicture)
             } else {
                 videoGroup.visibility = View.GONE
             }
             videoPicture.setOnClickListener {
                 onInteractionListener.onVideoGroup(post)
             }
-            play.setOnClickListener {
+            /*play.setOnClickListener {
                 onInteractionListener.onVideoGroup(post)
             }
             share.setOnClickListener {
@@ -74,7 +98,8 @@ class PostViewHolder(
             }
             content.setOnClickListener {
                 onInteractionListener.onContent(post)
-            }
+            }*/
+            menu.isVisible = post.ownedByMe
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post)

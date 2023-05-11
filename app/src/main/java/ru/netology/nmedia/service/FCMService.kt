@@ -1,25 +1,30 @@
 package ru.netology.nmedia.service
 
+import android.Manifest
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.RingtoneManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
+import okhttp3.internal.notify
 import ru.netology.nmedia.R
-import kotlin.random.Random
-
+import ru.netology.nmedia.activity.AppActivity
+import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.auth.AuthState
 
 class FCMService : FirebaseMessagingService() {
 
-    private val action = "action"
-    private val content = "content"
     private val channelId = "remote"
-    private val gson = Gson()
-
 
     override fun onCreate() {
         super.onCreate()
@@ -36,100 +41,53 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        val gson = Gson()
 
-        message.data[action]?.let {
-            try {
-                when (Action.valueOf(it)) {
-                    Action.LIKE -> handleLike(
-                        gson.fromJson(
-                            message.data[content],
-                            Like::class.java
-                        )
-                    )
-                    Action.NEW -> newPost(gson.fromJson(message.data[content], New::class.java))
-                }
-            } catch (e: Exception) {
-                otherMessage(gson.fromJson(message.data[content], Other::class.java))
-            }
+        val messageAuth =
+            gson.fromJson(message.data["content"], MessageIn::class.java)
+        val checkToken = AppAuth.getInstance().checkAuth(messageAuth.recipientId)
+
+        if (checkToken.isNullOrBlank()) {
+
+            sendNotification(messageAuth)
 
 
+        } else {
+            AppAuth.getInstance().sendPushToken(checkToken)
         }
     }
 
     override fun onNewToken(token: String) {
-        println(token)
+        AppAuth.getInstance().sendPushToken(token)
     }
 
-    private fun handleLike(content: Like) {
+    private fun sendNotification(messageIn: MessageIn) {
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(
                 getString(
-                    R.string.notification_user_liked,
-                    content.userName,
-                    content.postAuthor,
+                    R.string.notification_for_recipient,
+                    messageIn.recipientId.toString(),
+                    messageIn.content,
                 )
             )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
+            return
+        }
+        NotificationManagerCompat.from(this).notify(5, notification)
+
+
     }
 
-    private fun otherMessage(content: Other) {
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(
-                getString(
-                    R.string.notification_user_other,
-                    content.userName
-                )
-            )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
-    }
-
-    private fun newPost(content: New) {
-
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(
-                getString(
-                    R.string.notification_user_new,
-                    content.userName
-                )
-            )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(content.postContent))
-            .build()
-
-        NotificationManagerCompat.from(this)
-            .notify(Random.nextInt(100_000), notification)
-    }
 }
 
-enum class Action {
-    LIKE, NEW
-}
+data class MessageIn(val recipientId: Long?, val content: String)
 
-data class Like(
-    val userId: Long,
-    val userName: String,
-    val postId: Long,
-    val postAuthor: String,
-)
-
-data class Other(
-    val userId: Long,
-    val userName: String,
-    val postId: Long,
-)
-
-data class New(
-    val userName: String,
-    val postContent: String,
-)
