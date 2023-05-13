@@ -6,12 +6,13 @@ import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.*
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.auth.AuthState
+import ru.netology.nmedia.di.DependencyContainer
 
 class AuthViewModel : ViewModel() {
-    val data: LiveData<AuthState> = AppAuth.getInstance()
+    val data: LiveData<AuthState> = DependencyContainer.getInstance().appAuth
         .authStateFlow
         .asLiveData(Dispatchers.Default)
     val authenticated: Boolean
-        get() = AppAuth.getInstance().authStateFlow.value.id != 0L
+        get() = DependencyContainer.getInstance().appAuth.authStateFlow.value.id != 0L
 
 }

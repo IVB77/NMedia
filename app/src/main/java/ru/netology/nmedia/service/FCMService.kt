@@ -21,6 +21,7 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.AppActivity
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.auth.AuthState
+import ru.netology.nmedia.di.DependencyContainer
 
 class FCMService : FirebaseMessagingService() {
 
@@ -45,7 +46,7 @@ class FCMService : FirebaseMessagingService() {
 
         val messageAuth =
             gson.fromJson(message.data["content"], MessageIn::class.java)
-        val checkToken = AppAuth.getInstance().checkAuth(messageAuth.recipientId)
+        val checkToken = DependencyContainer.getInstance().appAuth.checkAuth(messageAuth.recipientId)
 
         if (checkToken.isNullOrBlank()) {
 
@@ -53,12 +54,12 @@ class FCMService : FirebaseMessagingService() {
 
 
         } else {
-            AppAuth.getInstance().sendPushToken(checkToken)
+            DependencyContainer.getInstance().appAuth.sendPushToken(checkToken)
         }
     }
 
     override fun onNewToken(token: String) {
-        AppAuth.getInstance().sendPushToken(token)
+        DependencyContainer.getInstance().appAuth.sendPushToken(token)
     }
 
     private fun sendNotification(messageIn: MessageIn) {

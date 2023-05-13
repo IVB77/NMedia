@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.di.DependencyContainer
 
 class DialogFragment : DialogFragment() {
 
@@ -13,7 +14,7 @@ class DialogFragment : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setTitle("Accept exit")
                 .setMessage("Are you sure?")
-                .setPositiveButton("Yes") {dialog,_ ->  AppAuth.getInstance().removeAuth()
+                .setPositiveButton("Yes") {dialog,_ ->  DependencyContainer.getInstance().appAuth.removeAuth()
                     dialog.cancel()
                 }
                 .setNegativeButton("No") { dialog,_ -> dialog.cancel() }

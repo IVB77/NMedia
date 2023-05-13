@@ -6,8 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import okhttp3.MultipartBody
-import ru.netology.nmedia.api.PostsApi
-import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.model.AuthModel
 import ru.netology.nmedia.model.PhotoModel
 import java.io.File
@@ -24,13 +23,13 @@ class SignViewModel() : ViewModel() {
 
     fun signIn(log: String, pass: String) {
         runBlocking {
-            val authPass = PostsApi.service.signIn(log, pass)
+            val authPass = DependencyContainer.getInstance().apiService.signIn(log, pass)
             if (authPass.isSuccessful) {
-                AppAuth.getInstance()
+                DependencyContainer.getInstance().appAuth
                     .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                 _authState.value = AuthModel(wrongLogin = false)
             } else {
-                AppAuth.getInstance().removeAuth()
+                DependencyContainer.getInstance().appAuth.removeAuth()
                 _authState.value = AuthModel(wrongLogin = true)
             }
         }
@@ -39,26 +38,26 @@ class SignViewModel() : ViewModel() {
     fun signUp(log: String, pass: String, name: String, file: MultipartBody.Part?) {
         if (file == null) {
             runBlocking {
-                val authPass = PostsApi.service.signUp(log, pass, name)
+                val authPass = DependencyContainer.getInstance().apiService.signUp(log, pass, name)
                 if (authPass.isSuccessful) {
-                    AppAuth.getInstance()
+                    DependencyContainer.getInstance().appAuth
                         .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                     _authState.value = AuthModel(errorAddUser = false)
                 } else {
-                    AppAuth.getInstance().removeAuth()
+                    DependencyContainer.getInstance().appAuth.removeAuth()
                     _authState.value = AuthModel(errorAddUser = true)
                 }
             }
         } else {
             runBlocking {
-                val authPass = PostsApi.service.signUpWithAvatar(log, pass, name, file)
+                val authPass = DependencyContainer.getInstance().apiService.signUpWithAvatar(log, pass, name, file)
 
                 if (authPass.isSuccessful) {
-                    AppAuth.getInstance()
+                    DependencyContainer.getInstance().appAuth
                         .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                     _authState.value = AuthModel(errorAddUser = false)
                 } else {
-                    AppAuth.getInstance().removeAuth()
+                    DependencyContainer.getInstance().appAuth.removeAuth()
                     _authState.value = AuthModel(errorAddUser = true)
                 }
             }

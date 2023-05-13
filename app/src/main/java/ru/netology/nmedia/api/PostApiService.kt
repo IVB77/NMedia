@@ -3,19 +3,11 @@ package ru.netology.nmedia.api
 
 import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import ru.netology.nmedia.auth.AuthState
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.dto.PushToken
-
-private const val BASE_URL = "http://10.0.2.2:9999/api/slow/"
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(GsonConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .build()
 
 interface PostsApiService {
 
@@ -74,8 +66,3 @@ interface PostsApiService {
 
 }
 
-object PostsApi {
-    val service: PostsApiService by lazy {
-        retrofit.create(PostsApiService::class.java)
-    }
-}
