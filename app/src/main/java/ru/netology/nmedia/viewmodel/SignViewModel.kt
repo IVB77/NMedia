@@ -4,16 +4,23 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import okhttp3.MultipartBody
-import ru.netology.nmedia.di.DependencyContainer
+import ru.netology.nmedia.api.PostsApiService
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.model.AuthModel
 import ru.netology.nmedia.model.PhotoModel
 import java.io.File
+import javax.inject.Inject
 
 private val noPhoto = PhotoModel()
-
-class SignViewModel() : ViewModel() {
+@HiltViewModel
+class SignViewModel @Inject constructor(
+    private val appAuth: AppAuth,
+    private val apiService: PostsApiService
+    ): ViewModel() {
     private val _authState = MutableLiveData<AuthModel>()
     val authState: LiveData<AuthModel>
         get() = _authState
@@ -23,13 +30,13 @@ class SignViewModel() : ViewModel() {
 
     fun signIn(log: String, pass: String) {
         runBlocking {
-            val authPass = DependencyContainer.getInstance().apiService.signIn(log, pass)
+            val authPass = apiService.signIn(log, pass)
             if (authPass.isSuccessful) {
-                DependencyContainer.getInstance().appAuth
+                appAuth
                     .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                 _authState.value = AuthModel(wrongLogin = false)
             } else {
-                DependencyContainer.getInstance().appAuth.removeAuth()
+                appAuth.removeAuth()
                 _authState.value = AuthModel(wrongLogin = true)
             }
         }
@@ -38,26 +45,31 @@ class SignViewModel() : ViewModel() {
     fun signUp(log: String, pass: String, name: String, file: MultipartBody.Part?) {
         if (file == null) {
             runBlocking {
-                val authPass = DependencyContainer.getInstance().apiService.signUp(log, pass, name)
+                val authPass = apiService.signUp(log, pass, name)
                 if (authPass.isSuccessful) {
-                    DependencyContainer.getInstance().appAuth
+                    appAuth
                         .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                     _authState.value = AuthModel(errorAddUser = false)
                 } else {
-                    DependencyContainer.getInstance().appAuth.removeAuth()
+                    appAuth.removeAuth()
                     _authState.value = AuthModel(errorAddUser = true)
                 }
             }
         } else {
             runBlocking {
-                val authPass = DependencyContainer.getInstance().apiService.signUpWithAvatar(log, pass, name, file)
+                val authPass = apiService.signUpWithAvatar(
+                    log,
+                    pass,
+                    name,
+                    file
+                )
 
                 if (authPass.isSuccessful) {
-                    DependencyContainer.getInstance().appAuth
+                    appAuth
                         .setAuth(authPass.body()!!.id, authPass.body()!!.token!!)
                     _authState.value = AuthModel(errorAddUser = false)
                 } else {
-                    DependencyContainer.getInstance().appAuth.removeAuth()
+                    appAuth.removeAuth()
                     _authState.value = AuthModel(errorAddUser = true)
                 }
             }

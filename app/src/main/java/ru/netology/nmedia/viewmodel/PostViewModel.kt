@@ -1,21 +1,24 @@
 package ru.netology.nmedia.viewmodel
 
-import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.activity.FeedModel
 import ru.netology.nmedia.activity.FeedModelState
-import ru.netology.nmedia.di.DependencyContainer
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
+import javax.inject.Inject
 
 
 private val empty = Post(
@@ -31,13 +34,14 @@ private val empty = Post(
     views = 0
 )
 private val noPhoto = PhotoModel()
+@OptIn(ExperimentalCoroutinesApi::class)
+@HiltViewModel
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    appAuth: AppAuth,
+) : ViewModel() {
 
-
-class PostViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository: PostRepository =
-        DependencyContainer.getInstance().repository
-    val data: LiveData<FeedModel> = DependencyContainer.getInstance().appAuth
+    val data: LiveData<FeedModel> = appAuth
         .authStateFlow
         .flatMapLatest { (myId, _) ->
             repository.data
@@ -68,6 +72,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val newer: LiveData<Int> = data.switchMap {
         repository.getNewer(it.posts.firstOrNull()?.id ?: 0L).asLiveData(Dispatchers.Default)
     }
+    @Inject
+    lateinit var appAuth: AppAuth
 
     init {
         loadPosts()
@@ -91,7 +97,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         repository.allOld()
     }
 
-    fun checkForSignIn():Boolean = DependencyContainer.getInstance().appAuth.authStateFlow.value.token.isNullOrBlank()
+    fun checkForSignIn(): Boolean = appAuth.authStateFlow.value.token.isNullOrBlank()
 
     fun likeById(id: Long) = viewModelScope.launch {
         try {

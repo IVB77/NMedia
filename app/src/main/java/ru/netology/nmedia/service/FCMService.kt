@@ -1,14 +1,10 @@
 package ru.netology.nmedia.service
 
 import android.Manifest
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -16,16 +12,18 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
-import okhttp3.internal.notify
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.AppActivity
 import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.auth.AuthState
-import ru.netology.nmedia.di.DependencyContainer
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
 
     private val channelId = "remote"
+
+    @Inject
+    lateinit var appAuth: AppAuth
 
     override fun onCreate() {
         super.onCreate()
@@ -46,7 +44,7 @@ class FCMService : FirebaseMessagingService() {
 
         val messageAuth =
             gson.fromJson(message.data["content"], MessageIn::class.java)
-        val checkToken = DependencyContainer.getInstance().appAuth.checkAuth(messageAuth.recipientId)
+        val checkToken = appAuth.checkAuth(messageAuth.recipientId)
 
         if (checkToken.isNullOrBlank()) {
 
@@ -54,12 +52,12 @@ class FCMService : FirebaseMessagingService() {
 
 
         } else {
-            DependencyContainer.getInstance().appAuth.sendPushToken(checkToken)
+            appAuth.sendPushToken(checkToken)
         }
     }
 
     override fun onNewToken(token: String) {
-        DependencyContainer.getInstance().appAuth.sendPushToken(token)
+        appAuth.sendPushToken(token)
     }
 
     private fun sendNotification(messageIn: MessageIn) {

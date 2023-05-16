@@ -15,12 +15,13 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.dhaval2404.imagepicker.constant.ImageProvider
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.SignUpBinding
 import ru.netology.nmedia.viewmodel.SignViewModel
-
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private val authViewModel: SignViewModel by activityViewModels()
 

@@ -3,16 +3,20 @@ package ru.netology.nmedia.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.auth.AuthState
-import ru.netology.nmedia.di.DependencyContainer
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
-    val data: LiveData<AuthState> = DependencyContainer.getInstance().appAuth
+@HiltViewModel
+class AuthViewModel @Inject constructor(private val auth: AppAuth) : ViewModel() {
+
+    val data: LiveData<AuthState> = auth
         .authStateFlow
         .asLiveData(Dispatchers.Default)
     val authenticated: Boolean
-        get() = DependencyContainer.getInstance().appAuth.authStateFlow.value.id != 0L
+        get() = auth.authStateFlow.value.id != 0L
 
 }
