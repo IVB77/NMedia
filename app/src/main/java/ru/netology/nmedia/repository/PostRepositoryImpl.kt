@@ -1,5 +1,7 @@
 package ru.netology.nmedia.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -23,7 +25,10 @@ class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
     private val apiService: PostsApiService,
 ) : PostRepository {
-    override val data = dao.getAll().map { it.map(PostEntity::toDto) }.flowOn(Dispatchers.Default)
+    override val data = Pager (
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        pagingSourceFactory = { PostPagingSource(apiService)}
+            ).flow
     override suspend fun getAll() {
         try {
             val response = apiService.getAll()

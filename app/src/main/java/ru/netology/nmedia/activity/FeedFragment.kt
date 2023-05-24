@@ -8,9 +8,14 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingSource
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostAdapter
@@ -100,15 +105,29 @@ class FeedFragment : Fragment() {
                     .show()
             }
         }
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
-            binding.emptyText.isVisible = state.empty
-        }
-        viewModel.newer.observe(viewLifecycleOwner) {
-            if (it != 0) {
-                binding.newerPost.isVisible = true
+        lifecycleScope.launchWhenCreated {
+            viewModel.appAuth.authStateFlow.collectLatest {
+                adapter.refresh()
             }
         }
+        lifecycleScope.launchWhenCreated {
+            viewModel.data.collectLatest {
+                adapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest {
+               binding.swiperefresh.isRefreshing =  it.refresh is LoadState.Loading
+                        || it.append is LoadState.Loading
+                        || it.prepend is LoadState.Loading
+            }
+        }
+        /* viewModel.newer.observe(viewLifecycleOwner) {
+             if (it != 0) {
+                 binding.newerPost.isVisible = true
+             }
+         }*/
 
         binding.fab.setOnClickListener {
 
@@ -125,7 +144,7 @@ class FeedFragment : Fragment() {
             }
         }
         binding.swiperefresh.setOnRefreshListener {
-            viewModel.refresh()
+            adapter.refresh()
             binding.swiperefresh.isRefreshing = false
             binding.newerPost.visibility = View.GONE
             binding.list.smoothScrollToPosition(0)
@@ -138,12 +157,11 @@ class FeedFragment : Fragment() {
 
 
         }
+
         return binding.root
     }
 
 }
-
-
 object UserCommand {
     fun numberConversion(number: Int): String {
         return if (number < 1_000) {
