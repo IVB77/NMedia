@@ -11,11 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.PagingSource
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostAdapter
@@ -118,9 +116,9 @@ class FeedFragment : Fragment() {
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest {
-               binding.swiperefresh.isRefreshing =  it.refresh is LoadState.Loading
+                binding.swiperefresh.isRefreshing = it.refresh is LoadState.Loading
                         || it.append is LoadState.Loading
-                        || it.prepend is LoadState.Loading
+                // || it.prepend is LoadState.Loading
             }
         }
         /* viewModel.newer.observe(viewLifecycleOwner) {
@@ -162,6 +160,7 @@ class FeedFragment : Fragment() {
     }
 
 }
+
 object UserCommand {
     fun numberConversion(number: Int): String {
         return if (number < 1_000) {
