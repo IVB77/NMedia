@@ -20,6 +20,7 @@ import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.UnknownError
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.random.Random
 
 @Singleton
 class PostRepositoryImpl @Inject constructor(
@@ -29,7 +30,7 @@ class PostRepositoryImpl @Inject constructor(
     appDb: AppDb,
 ) : PostRepository {
     @OptIn(ExperimentalPagingApi::class)
-    override val data: Flow<PagingData<Post>> = Pager(
+    override val data: Flow<PagingData<FeedItem>> = Pager(
         config = PagingConfig(pageSize = 10),
         pagingSourceFactory = dao::getPagingSource,
         remoteMediator = PostRemoteMediator(
@@ -39,7 +40,8 @@ class PostRepositoryImpl @Inject constructor(
             appDb = appDb,
         )
     ).flow
-        .map { it.map(PostEntity::toDto) }
+        .map { it.map(PostEntity::toDto)}
+
 
     override suspend fun getAll() {
         try {

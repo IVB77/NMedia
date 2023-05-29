@@ -41,4 +41,5 @@
     <string name="menu_back">menu_back</string>
     <string name="differents_password">Differents PASSWORD</string>
     <string name="notification_for_recipient">Message for %1$s  : %2$s</string>
+    <string name="ad_description">ad</string>
 </resources>

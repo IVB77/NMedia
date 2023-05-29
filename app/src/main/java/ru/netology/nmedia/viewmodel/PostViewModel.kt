@@ -3,6 +3,8 @@ package ru.netology.nmedia.viewmodel
 import android.net.Uri
 import androidx.lifecycle.*
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +16,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.activity.FeedModelState
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.dto.Ad
+import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.PhotoModel
@@ -21,6 +25,7 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 private val empty = Post(
@@ -43,15 +48,30 @@ class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     appAuth: AppAuth,
 ) : ViewModel() {
+    private val cashed: Flow<PagingData<FeedItem>> = repository
+        .data
+        .map { pagingData ->
+            pagingData.insertSeparators(
+                generator = { before, after ->
+                    if (before?.id?.rem(5) != 0L) null else
+                        Ad(
+                            Random.nextLong(),
+                            "https://netology.ru",
+                            "figma.jpg"
+                        )
 
-    val data: Flow<PagingData<Post>> = appAuth
+                }
+            )
+        }.cachedIn(viewModelScope)
+
+    val data: Flow<PagingData<FeedItem>> = appAuth
         .authStateFlow
         .flatMapLatest { (myId, _) ->
-            repository.data
-                .map { posts ->
-                    posts.map { it.copy(ownedByMe = it.authorId == myId) }
+            cashed
+                .map { pagingData ->
+                    pagingData.map { item -> if (item !is Post) item else item.copy(ownedByMe = item.authorId == myId) }
                 }
-        }.flowOn(Dispatchers.Default)
+        }
 
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
