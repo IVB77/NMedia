@@ -50,9 +50,11 @@ class PostViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     @SuppressLint("CheckResult")
     fun bind(post: Post) {
-        val urlAvatars = "http://10.0.2.2:9999/avatars/"
+        val urlAvatars = "https://netomedia.ru/avatars/"
+        //val urlAvatars = "http://10.0.2.2:9999/avatars/"
         //val urlImages = "http://10.0.2.2:9999/images/"
-        val urlMedia = "http://10.0.2.2:9999/media/"
+        val urlMedia = "https://netomedia.ru/media/"
+        //val urlMedia = "http://10.0.2.2:9999/media/"
         binding.apply {
             author.text = post.author
 

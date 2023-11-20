@@ -47,26 +47,26 @@ interface PostsApiService {
     suspend fun upload(@Part media: MultipartBody.Part): Response<Media>
 
     @FormUrlEncoded
-    @POST("../users/authentication")
+    @POST("../api/users/authentication")
     suspend fun signIn(
         @Field("login") login: String,
-        @Field("pass") pass: String
+        @Field("password") pass: String
     ): Response<AuthState>
 
     @FormUrlEncoded
-    @POST("../users/registration")
+    @POST("../api/users/registration")
     suspend fun signUp(
         @Field("login") login: String,
-        @Field("pass") pass: String,
+        @Field("password") pass: String,
         @Field("name") name: String
     ): Response<AuthState>
 
 
     @Multipart
-    @POST("../users/registration")
+    @POST("../api/users/registration")
     suspend fun signUpWithAvatar(
         @Part("login") login: String,
-        @Part("pass") pass: String,
+        @Part("password") pass: String,
         @Part("name") name: String,
         @Part file: MultipartBody.Part
     ): Response<AuthState>

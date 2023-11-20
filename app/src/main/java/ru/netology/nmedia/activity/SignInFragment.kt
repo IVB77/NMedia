@@ -6,6 +6,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
@@ -53,7 +54,10 @@ class SignInFragment : Fragment() {
                 val pass: String = password.text.toString()
                 viewModel.signIn(log, pass)
                 if (!viewModel.authState.value!!.wrongLogin) {
-                    findNavController().navigateUp()
+                    findNavController().navigate(
+                        R.id.action_signInActivity_to_feedFragment
+                    )
+                    //findNavController().navigateUp()
                 }
             }
         }

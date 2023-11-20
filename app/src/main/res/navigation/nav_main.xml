@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/feedFragment">
+    app:startDestination="@id/signInActivity">
     <fragment
         android:id="@+id/feedFragment"
         android:name="ru.netology.nmedia.activity.FeedFragment"
@@ -18,9 +18,6 @@
         <action
             android:id="@+id/action_feedFragment_to_signInActivity"
             app:destination="@+id/signInActivity"/>
-        <action
-            android:id="@+id/action_feedFragment_to_signUpActivity"
-            app:destination="@+id/signUpFragment"/>
     </fragment>
     <fragment
         android:id="@+id/newPostFragment"
@@ -40,7 +37,14 @@
         android:id="@+id/signInActivity"
         android:name="ru.netology.nmedia.activity.SignInFragment"
         android:label="sign_in"
-        tools:layout="@layout/sign_in" />
+        tools:layout="@layout/sign_in" >
+        <action
+            android:id="@+id/action_signInActivity_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInActivity_to_feedFragment"
+            app:destination="@id/feedFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="ru.netology.nmedia.activity.SignUpFragment"

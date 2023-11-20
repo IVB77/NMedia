@@ -26,7 +26,8 @@ class ViewPostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentViewPostBinding.inflate(inflater, container, false)
-        val urlMedia = "http://10.0.2.2:9999/media/"
+        val urlMedia = "https://netomedia.ru/media/"
+        //val urlMedia = "http://10.0.2.2:9999/media/"
         binding.apply {
             val urlPicture = urlMedia + arguments?.textArg
             Glide.with(Picture)
